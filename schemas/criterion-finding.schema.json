@@ -1,0 +1,93 @@
+{
+  "$id": "eval-lab/criterion-finding.schema.json",
+  "title": "criterion-finding",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "criterionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "partial",
+        "fail",
+        "inconclusive",
+        "not-applicable"
+      ]
+    },
+    "rating": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "value",
+            "min",
+            "max"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "explanation": {
+      "default": "",
+      "type": "string",
+      "maxLength": 5000
+    },
+    "evidenceRefs": {
+      "default": [],
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 200
+      }
+    },
+    "method": {
+      "default": "manual",
+      "type": "string",
+      "enum": [
+        "deterministic",
+        "manual",
+        "blinded-comparison",
+        "executable"
+      ]
+    },
+    "checkId": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "correctedByOwner": {
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "criterionId",
+    "outcome"
+  ]
+}

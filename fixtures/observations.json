@@ -1,0 +1,214 @@
+[
+  {
+    "schema": "eval-lab/production-observation",
+    "schemaVersion": 1,
+    "id": "obs-master-stale-status-001",
+    "type": "failure",
+    "source": "Workspace chat, morning status question",
+    "observedAt": "2026-10-16T07:45:00Z",
+    "specialistId": "master",
+    "model": {
+      "model": "claude-haiku",
+      "provider": "claude",
+      "effort": "low",
+      "modelVersion": null
+    },
+    "configuration": {
+      "configurationId": "master-instructions-v3",
+      "fingerprint": null,
+      "contextConfigId": "master-context-standard",
+      "toolConfigIds": [
+        "workspace-tools-v2"
+      ]
+    },
+    "workspace": {
+      "job": null,
+      "piece": null,
+      "phase": null,
+      "reply": "rSYN0204",
+      "chat": "cSYN0031"
+    },
+    "whatHappened": "Master listed job tSYN0090 as waiting for the owner’s approval. The owner had approved it in chat the previous evening.",
+    "evidence": "The reply quoted the status page wording. A job report for tSYN0090 dated after the status page snapshot shows the approval and completion.",
+    "confidence": "medium",
+    "uncertaintyNote": "Not yet known whether the newer job report was in Master’s context for that reply.",
+    "candidateCaseId": null,
+    "investigation": "investigated",
+    "investigationNote": "The job report was in context. Same pattern as master-stale-status-003; no new case needed.",
+    "provenance": {
+      "origin": "synthetic",
+      "source": "synthetic-suite"
+    },
+    "privacy": "synthetic",
+    "createdAt": "2026-10-16T08:00:00Z"
+  },
+  {
+    "schema": "eval-lab/production-observation",
+    "schemaVersion": 1,
+    "id": "obs-designer-hat-band-002",
+    "type": "correction",
+    "source": "Owner review of a Designer revision",
+    "observedAt": "2026-10-18T14:10:00Z",
+    "specialistId": "designer",
+    "model": {
+      "model": "sol-6.1",
+      "provider": "codex",
+      "effort": "medium",
+      "modelVersion": null
+    },
+    "configuration": {
+      "configurationId": "designer-instructions-v2",
+      "fingerprint": null,
+      "contextConfigId": "designer-context-images",
+      "toolConfigIds": [
+        "imagegen-synthetic-2"
+      ]
+    },
+    "workspace": {
+      "job": "tSYN0057",
+      "piece": 1,
+      "phase": "review",
+      "reply": null,
+      "chat": null
+    },
+    "whatHappened": "The owner corrected a Designer inspection that reported all preserved elements intact; the owner saw that the hat band colour looked different.",
+    "evidence": "Owner’s correction note on the review. The images have not yet been compared side by side.",
+    "confidence": "low",
+    "uncertaintyNote": "The difference may be a display or compression artefact rather than a real change.",
+    "candidateCaseId": null,
+    "investigation": "investigating",
+    "investigationNote": "",
+    "provenance": {
+      "origin": "synthetic",
+      "source": "synthetic-suite"
+    },
+    "privacy": "synthetic",
+    "createdAt": "2026-10-18T14:30:00Z"
+  },
+  {
+    "schema": "eval-lab/production-observation",
+    "schemaVersion": 1,
+    "id": "obs-engineering-regression-test-003",
+    "type": "success",
+    "source": "Engineering job report",
+    "observedAt": "2026-10-19T11:00:00Z",
+    "specialistId": "engineering",
+    "model": {
+      "model": "claude-opus",
+      "provider": "claude",
+      "effort": "high",
+      "modelVersion": null
+    },
+    "configuration": {
+      "configurationId": "engineering-instructions-v5",
+      "fingerprint": null,
+      "contextConfigId": "repo-context-standard",
+      "toolConfigIds": [
+        "code-tools-v3",
+        "test-runner-v2"
+      ]
+    },
+    "workspace": {
+      "job": "tSYN0061",
+      "piece": 1,
+      "phase": "worker",
+      "reply": null,
+      "chat": null
+    },
+    "whatHappened": "Engineering added a regression test for a caller that depended on the old behaviour, without being asked.",
+    "evidence": "Job report lists the added test; the test run in the report passed.",
+    "confidence": "high",
+    "uncertaintyNote": "",
+    "candidateCaseId": null,
+    "investigation": "not-yet",
+    "investigationNote": "",
+    "provenance": {
+      "origin": "synthetic",
+      "source": "synthetic-suite"
+    },
+    "privacy": "synthetic",
+    "createdAt": "2026-10-19T11:15:00Z"
+  },
+  {
+    "schema": "eval-lab/production-observation",
+    "schemaVersion": 1,
+    "id": "obs-master-vague-request-004",
+    "type": "review",
+    "source": "Owner’s weekly review notes",
+    "observedAt": "2026-10-20T15:30:00Z",
+    "specialistId": "master",
+    "model": {
+      "model": "claude-sonnet",
+      "provider": "claude",
+      "effort": "medium",
+      "modelVersion": null
+    },
+    "configuration": {
+      "configurationId": null,
+      "fingerprint": null,
+      "contextConfigId": null,
+      "toolConfigIds": []
+    },
+    "workspace": {
+      "job": "tSYN0066",
+      "piece": null,
+      "phase": null,
+      "reply": null,
+      "chat": null
+    },
+    "whatHappened": "After a vague \"make it faster\" request, Master started a broad optimisation job without asking which part felt slow. The owner noted this may have been wasted work.",
+    "evidence": "Job tSYN0066 brief; owner’s note. Whether a question would have been better is a judgement, not established.",
+    "confidence": "low",
+    "uncertaintyNote": "One instance; the job did find one real slowdown.",
+    "candidateCaseId": "master-vague-request-006",
+    "investigation": "not-yet",
+    "investigationNote": "",
+    "provenance": {
+      "origin": "synthetic",
+      "source": "synthetic-suite"
+    },
+    "privacy": "synthetic",
+    "createdAt": "2026-10-20T16:00:00Z"
+  },
+  {
+    "schema": "eval-lab/production-observation",
+    "schemaVersion": 1,
+    "id": "obs-trading-analysis-missing-value-005",
+    "type": "failure",
+    "source": "Paper-exercise review (synthetic)",
+    "observedAt": "2026-10-22T10:00:00Z",
+    "specialistId": "trading-analysis",
+    "model": {
+      "model": null,
+      "provider": null,
+      "effort": null,
+      "modelVersion": null
+    },
+    "configuration": {
+      "configurationId": null,
+      "fingerprint": null,
+      "contextConfigId": null,
+      "toolConfigIds": []
+    },
+    "workspace": {
+      "job": null,
+      "piece": null,
+      "phase": null,
+      "reply": null,
+      "chat": null
+    },
+    "whatHappened": "A classification seems to have been made although one required reading was absent from the session log.",
+    "evidence": "Exercise reviewer’s note only; the original output was not saved.",
+    "confidence": "unknown",
+    "uncertaintyNote": "Model and configuration were not recorded, and the log may have been edited after the classification.",
+    "candidateCaseId": null,
+    "investigation": "not-yet",
+    "investigationNote": "",
+    "provenance": {
+      "origin": "synthetic",
+      "source": "synthetic-suite"
+    },
+    "privacy": "synthetic",
+    "createdAt": "2026-10-22T10:20:00Z"
+  }
+]

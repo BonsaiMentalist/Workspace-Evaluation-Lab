@@ -1,0 +1,846 @@
+{
+  "profiles": [
+    {
+      "schema": "eval-lab/specialist-profile",
+      "schemaVersion": 1,
+      "id": "trading-analysis",
+      "version": 1,
+      "name": "Trading Analysis",
+      "purpose": "Classifies setups under the fictional Tidewater rules on synthetic instruments in training exercises. Judged on fidelity to the stated rules and the supplied evidence only. Nothing here applies to any real market.",
+      "capabilities": [
+        {
+          "id": "primary",
+          "name": "Rule-based setup classification",
+          "description": "Applying the fictional Tidewater rules to synthetic session logs.",
+          "optional": false
+        }
+      ],
+      "criteria": [
+        {
+          "id": "framework-fidelity",
+          "name": "Fidelity to the framework",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual",
+            "deterministic"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: applies the Tidewater rules as written and cites them by number; adds no outside rules or indicators."
+        },
+        {
+          "id": "evidence-interpretation",
+          "name": "Interpretation of supplied evidence",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual",
+            "deterministic"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: reads every relevant value in the session log correctly (closes, highs, lows, gauge readings)."
+        },
+        {
+          "id": "setup-classification",
+          "name": "Setup classification",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: names the pattern present (if any) and whether it qualifies as a setup under the rules."
+        },
+        {
+          "id": "rule-compliance",
+          "name": "Rule compliance",
+          "description": "",
+          "tier": "core",
+          "mandatory": true,
+          "capability": "primary",
+          "methods": [
+            "deterministic",
+            "manual"
+          ],
+          "weight": 5,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Mandatory. Fail if the decision contradicts any applicable rule, e.g. accepting a setup that a filter rule invalidates."
+        },
+        {
+          "id": "insufficient-evidence",
+          "name": "Recognising contradictory or insufficient evidence",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "deterministic",
+            "manual"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: when a value a rule needs is missing or contradictory, says so and declines to classify instead of filling the gap with an assumption."
+        },
+        {
+          "id": "unsupported-conclusions",
+          "name": "Identifying invalid or unsupported conclusions",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 3,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: draws no conclusions beyond what the rules and the log support (no forecasts, no confidence the rules do not provide)."
+        }
+      ],
+      "changeNote": "",
+      "createdAt": "2026-09-01T09:00:00Z",
+      "origin": "synthetic"
+    }
+  ],
+  "cases": [
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "trading-analysis-invalid-setup-001",
+      "version": 1,
+      "status": "evaluated",
+      "archived": false,
+      "split": "development",
+      "specialistId": "trading-analysis",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "A pattern that looks like an Ebb Reversal but fails the gauge filter",
+      "task": "Classify the latest sessions of the synthetic Kestrel basket (KSB-SYN) under the Tidewater rules. End with two lines: \"Decision: accept | reject | insufficient evidence\" and \"Setup: <setup name or none>\". Cite the context items you rely on by their bracketed ids, for example [E1].",
+      "context": [
+        {
+          "id": "rules",
+          "title": "E1 · Tidewater rules (fictional)",
+          "kind": "text",
+          "text": "TIDEWATER RULES — a fictional framework for training exercises on synthetic instruments only.\n\nTW-1 Ebb Reversal: three consecutive sessions, each closing below the previous session's close, followed by a turn session that closes above the previous session's high.\nTW-2 Tide Gauge filter: no setup is valid if the Tide Gauge reading on the turn session is below 0.80. If the reading is missing, the setup cannot be classified.\nTW-3 Slack hour: a session that ends inside the exchange's final slack hour is not used for classification.\nTW-4 Boundary: the boundary for an Ebb Reversal is the lowest low of the three falling sessions.\nTW-5 Flood Shelf: after an accepted Ebb Reversal, four sessions closing above the turn session's close.",
+          "attachment": null,
+          "authoritative": true,
+          "note": ""
+        },
+        {
+          "id": "sessions",
+          "title": "E2 · Session log, KSB-SYN (synthetic)",
+          "kind": "text",
+          "text": "S1: close 104.2, high 105.0, low 103.6, gauge 0.88\nS2: close 103.1, high 104.0, low 102.8, gauge 0.84\nS3: close 102.7, high 103.4, low 102.1, gauge 0.91\nS4: close 103.9, high 104.1, low 102.5, gauge 0.62\nNo session ended in the slack hour.",
+          "attachment": null,
+          "authoritative": false,
+          "note": "Synthetic data for a paper exercise on a fictional instrument. Not related to any real market."
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Recognise the TW-1 pattern (three lower closes, then S4 closing at 103.9 above S3’s high of 103.4) but reject it under TW-2, because the gauge on the turn session is 0.62, below 0.80. Decision: reject; Setup: none.",
+        "acceptanceCriteria": [
+          "Identifies the TW-1 pattern correctly from the log.",
+          "Rejects it, citing TW-2 and the 0.62 reading.",
+          "Does not state a boundary or any follow-on expectation for a rejected setup."
+        ],
+        "referenceAnswer": "S1–S3 close lower and S4 closes above S3’s high, so the TW-1 shape is present [E2]; S4’s gauge is 0.62 < 0.80, so TW-2 invalidates it [E1]. Decision: reject. Setup: none.",
+        "answerKind": "objective"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "TW-2: no setup is valid with a turn-session gauge below 0.80.",
+          "contextItemId": "rules"
+        },
+        {
+          "id": "E2",
+          "description": "S4 (the turn session) has gauge 0.62.",
+          "contextItemId": "sessions"
+        }
+      ],
+      "methods": [
+        "deterministic",
+        "manual"
+      ],
+      "checks": [
+        {
+          "id": "decision-reject",
+          "criterionId": "rule-compliance",
+          "type": "expected-label",
+          "label": "Decision",
+          "accepted": [
+            "reject"
+          ],
+          "description": "The setup is rejected."
+        },
+        {
+          "id": "names-tw2",
+          "criterionId": "framework-fidelity",
+          "type": "required-phrase",
+          "phrases": [
+            "TW-2"
+          ],
+          "match": "any",
+          "description": "The gauge filter rule is named."
+        },
+        {
+          "id": "cites-log",
+          "criterionId": "evidence-interpretation",
+          "type": "evidence-reference",
+          "refs": [
+            "E2"
+          ],
+          "min": 1,
+          "description": "The session log is cited."
+        }
+      ],
+      "limitations": "None known",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "tidewater",
+        "filter-rule",
+        "fictional"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-09-05T10:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "trading-analysis-missing-gauge-002",
+      "version": 1,
+      "status": "frozen",
+      "archived": false,
+      "split": "held-out",
+      "specialistId": "trading-analysis",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Turn-session gauge reading is missing",
+      "task": "Classify the latest sessions of the synthetic Heron index (HRN-SYN) under the Tidewater rules. End with two lines: \"Decision: accept | reject | insufficient evidence\" and \"Setup: <setup name or none>\". Cite the context items you rely on by their bracketed ids, for example [E1].",
+      "context": [
+        {
+          "id": "rules",
+          "title": "E1 · Tidewater rules (fictional)",
+          "kind": "text",
+          "text": "TIDEWATER RULES — a fictional framework for training exercises on synthetic instruments only.\n\nTW-1 Ebb Reversal: three consecutive sessions, each closing below the previous session's close, followed by a turn session that closes above the previous session's high.\nTW-2 Tide Gauge filter: no setup is valid if the Tide Gauge reading on the turn session is below 0.80. If the reading is missing, the setup cannot be classified.\nTW-3 Slack hour: a session that ends inside the exchange's final slack hour is not used for classification.\nTW-4 Boundary: the boundary for an Ebb Reversal is the lowest low of the three falling sessions.\nTW-5 Flood Shelf: after an accepted Ebb Reversal, four sessions closing above the turn session's close.",
+          "attachment": null,
+          "authoritative": true,
+          "note": ""
+        },
+        {
+          "id": "sessions",
+          "title": "E2 · Session log, HRN-SYN (synthetic)",
+          "kind": "text",
+          "text": "S1: close 58.4, high 59.0, low 57.9, gauge 0.93\nS2: close 57.6, high 58.5, low 57.1, gauge 0.90\nS3: close 57.0, high 57.8, low 56.6, gauge 0.91\nS4: close 58.1, high 58.3, low 56.9, gauge not recorded (sensor gap)\nNo session ended in the slack hour.",
+          "attachment": null,
+          "authoritative": false,
+          "note": "Synthetic data for a paper exercise on a fictional instrument. Not related to any real market."
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Note that the TW-1 shape is present but the turn-session gauge is missing, and TW-2 says the setup then cannot be classified. Do not infer the missing reading from earlier sessions. Decision: insufficient evidence.",
+        "acceptanceCriteria": [
+          "Identifies the TW-1 shape.",
+          "States that the S4 gauge reading is missing and that TW-2 requires it.",
+          "Does not estimate or assume the missing value.",
+          "Decision is insufficient evidence."
+        ],
+        "referenceAnswer": "TW-1 shape present [E2]; S4 gauge not recorded; TW-2 requires it [E1]. Decision: insufficient evidence. Setup: none.",
+        "answerKind": "objective"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "TW-2: a missing turn-session gauge means the setup cannot be classified.",
+          "contextItemId": "rules"
+        },
+        {
+          "id": "E2",
+          "description": "S4 gauge not recorded.",
+          "contextItemId": "sessions"
+        }
+      ],
+      "methods": [
+        "deterministic",
+        "manual"
+      ],
+      "checks": [
+        {
+          "id": "decision-insufficient",
+          "criterionId": "insufficient-evidence",
+          "type": "expected-label",
+          "label": "Decision",
+          "accepted": [
+            "insufficient evidence"
+          ],
+          "description": "The output declines to classify."
+        }
+      ],
+      "limitations": "None known",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "tidewater",
+        "missing-data",
+        "fictional"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-09-13T10:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "trading-analysis-slack-hour-003",
+      "version": 1,
+      "status": "validated",
+      "archived": false,
+      "split": "development",
+      "specialistId": "trading-analysis",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Turn session ends in the slack hour",
+      "task": "Classify the latest sessions of the synthetic Plover basket (PLV-SYN) under the Tidewater rules. End with two lines: \"Decision: accept | reject | insufficient evidence\" and \"Setup: <setup name or none>\". Cite the context items you rely on by their bracketed ids, for example [E1].",
+      "context": [
+        {
+          "id": "rules",
+          "title": "E1 · Tidewater rules (fictional)",
+          "kind": "text",
+          "text": "TIDEWATER RULES — a fictional framework for training exercises on synthetic instruments only.\n\nTW-1 Ebb Reversal: three consecutive sessions, each closing below the previous session's close, followed by a turn session that closes above the previous session's high.\nTW-2 Tide Gauge filter: no setup is valid if the Tide Gauge reading on the turn session is below 0.80. If the reading is missing, the setup cannot be classified.\nTW-3 Slack hour: a session that ends inside the exchange's final slack hour is not used for classification.\nTW-4 Boundary: the boundary for an Ebb Reversal is the lowest low of the three falling sessions.\nTW-5 Flood Shelf: after an accepted Ebb Reversal, four sessions closing above the turn session's close.",
+          "attachment": null,
+          "authoritative": true,
+          "note": ""
+        },
+        {
+          "id": "sessions",
+          "title": "E2 · Session log, PLV-SYN (synthetic)",
+          "kind": "text",
+          "text": "S1: close 21.4, gauge 0.86\nS2: close 21.1, gauge 0.88\nS3: close 20.8, high 21.0, gauge 0.90\nS4: close 21.3, gauge 0.95 — session ended inside the slack hour",
+          "attachment": null,
+          "authoritative": false,
+          "note": "Synthetic data for a paper exercise on a fictional instrument. Not related to any real market."
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Exclude S4 under TW-3, so there is no turn session and no setup. Decision: reject (or no classification); Setup: none.",
+        "acceptanceCriteria": [
+          "Applies TW-3 to exclude S4.",
+          "Does not classify an Ebb Reversal."
+        ],
+        "referenceAnswer": "S4 excluded by TW-3 [E1][E2]; no turn session. Decision: reject. Setup: none.",
+        "answerKind": "objective"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "TW-3 excludes sessions ending in the slack hour.",
+          "contextItemId": "rules"
+        },
+        {
+          "id": "E2",
+          "description": "S4 ended inside the slack hour.",
+          "contextItemId": "sessions"
+        }
+      ],
+      "methods": [
+        "deterministic",
+        "manual"
+      ],
+      "checks": [
+        {
+          "id": "decision-reject",
+          "criterionId": "rule-compliance",
+          "type": "expected-label",
+          "label": "Decision",
+          "accepted": [
+            "reject",
+            "insufficient evidence"
+          ],
+          "description": "No setup is accepted."
+        }
+      ],
+      "limitations": "Whether \"reject\" or \"insufficient evidence\" is the better label is not fixed by the rules; both are accepted.",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "tidewater",
+        "slack-hour",
+        "fictional"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-10-15T10:00:00Z"
+    }
+  ],
+  "outputs": [
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-trading-analysis-invalid-setup-001-a",
+      "caseId": "trading-analysis-invalid-setup-001",
+      "caseVersion": 1,
+      "label": "Opus · instructions v1",
+      "text": "Pattern check (TW-1): S1 → S3 close lower each session (104.2, 103.1, 102.7), and S4 closes at 103.9, above S3's high of 103.4 [E2]. So the Ebb Reversal shape is there.\n\nFilter (TW-2): the turn session is S4, and its Tide Gauge reading is 0.62 [E2]. TW-2 says no setup is valid below 0.80 on the turn session [E1]. That rules it out.\n\nTW-3 doesn't apply — no session ended in the slack hour. Because the setup is rejected, no TW-4 boundary is given.\n\nDecision: reject\nSetup: none",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-opus",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "tidewater-instructions-v1",
+        "fingerprint": null,
+        "contextConfigId": "tidewater-rulebook-v1",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": "rSYN0102",
+        "chat": "cSYN0018"
+      },
+      "resources": {
+        "tokens": {
+          "uncached": 1700,
+          "cacheWrite": 3300,
+          "cacheWrite1h": null,
+          "cacheRead": 0,
+          "output": 280,
+          "thinking": 740
+        },
+        "durationS": 8.9,
+        "steps": null,
+        "provenance": {
+          "source": "synthetic",
+          "note": ""
+        }
+      },
+      "producedAt": "2026-09-06T12:00:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-06T12:20:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-trading-analysis-invalid-setup-001-b",
+      "caseId": "trading-analysis-invalid-setup-001",
+      "caseVersion": 1,
+      "label": "Haiku · instructions v1",
+      "text": "Three lower closes in a row (104.2 → 103.1 → 102.7) followed by S4 closing at 103.9, above S3's high [E2]. That's a textbook Ebb Reversal under TW-1 [E1].\n\nBoundary per TW-4: 102.1 (S3's low). The gauge dipped on S4, but the earlier sessions were all comfortably above 0.80, so the overall reading is healthy. This looks like a strong setup and a Flood Shelf could follow.\n\nDecision: accept\nSetup: Ebb Reversal",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-haiku",
+        "provider": "claude",
+        "effort": "low",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "tidewater-instructions-v1",
+        "fingerprint": null,
+        "contextConfigId": "tidewater-rulebook-v1",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "producedAt": "2026-09-06T12:01:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-06T12:20:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-trading-analysis-missing-gauge-002-a",
+      "caseId": "trading-analysis-missing-gauge-002",
+      "caseVersion": 1,
+      "label": "Sol 6.1 · instructions v2",
+      "text": "The TW-1 shape is present: closes fall 58.4 → 57.6 → 57.0, and S4 closes at 58.1, above S3's high of 57.8 [E2].\n\nBut S4 is the turn session and its gauge was not recorded [E2]. TW-2 needs that reading, and says a setup with a missing reading cannot be classified [E1]. The earlier sessions' readings (0.90–0.93) don't stand in for it — the rule is about the turn session only.\n\nIf the sensor log for S4 is recovered, this can be re-checked.\n\nDecision: insufficient evidence\nSetup: none",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "sol-6.1",
+        "provider": "codex",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "tidewater-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "tidewater-rulebook-v1",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": "tSYN0041",
+        "piece": 1,
+        "phase": "worker",
+        "reply": null,
+        "chat": null
+      },
+      "producedAt": "2026-09-14T09:30:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-14T09:45:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-trading-analysis-missing-gauge-002-b",
+      "caseId": "trading-analysis-missing-gauge-002",
+      "caseVersion": 1,
+      "label": "Sonnet · instructions v2",
+      "text": "TW-1: three lower closes (58.4, 57.6, 57.0) and S4 closes at 58.1 above S3's high of 57.8 [E2] — Ebb Reversal shape confirmed.\n\nTW-2: S4's gauge is missing due to a sensor gap, but S1–S3 all read between 0.90 and 0.93, so S4 was almost certainly above 0.80 as well. Treating the filter as passed.\n\nTW-4 boundary: 56.6 (S3's low).\n\nDecision: accept\nSetup: Ebb Reversal",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-sonnet",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "tidewater-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "tidewater-rulebook-v1",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "producedAt": "2026-09-14T09:31:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-14T09:45:00Z"
+    }
+  ],
+  "results": [
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-trading-analysis-invalid-setup-001-a",
+      "runId": "run-human-trading-analysis-2026-10-13",
+      "caseId": "trading-analysis-invalid-setup-001",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "trading-analysis",
+      "profileVersion": 1,
+      "outputId": "out-trading-analysis-invalid-setup-001-a",
+      "model": {
+        "model": "claude-opus",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "tidewater-instructions-v1",
+        "fingerprint": null,
+        "contextConfigId": "tidewater-rulebook-v1",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": "rSYN0102",
+        "chat": "cSYN0018"
+      },
+      "resources": {
+        "tokens": {
+          "uncached": 1700,
+          "cacheWrite": 3300,
+          "cacheWrite1h": null,
+          "cacheRead": 0,
+          "output": 280,
+          "thinking": 740
+        },
+        "durationS": 8.9,
+        "steps": null,
+        "provenance": {
+          "source": "synthetic",
+          "note": ""
+        }
+      },
+      "methods": [
+        "manual"
+      ],
+      "evaluator": {
+        "type": "human",
+        "name": "Synthetic reviewer",
+        "version": null,
+        "date": "2026-10-13T09:00:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "rule-compliance",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Rejects the setup under TW-2 because the turn-session gauge is 0.62.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "framework-fidelity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Applies TW-1 to TW-4 as written and cites each by number.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "evidence-interpretation",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Reads closes, S3’s high and S4’s gauge correctly.",
+          "evidenceRefs": [
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "setup-classification",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Separates \"shape present\" from \"valid setup\".",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "insufficient-evidence",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "All needed values are present.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "unsupported-conclusions",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Gives no boundary or forecast for a rejected setup.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "createdAt": "2026-10-13T09:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-trading-analysis-invalid-setup-001-b",
+      "runId": "run-human-trading-analysis-2026-10-13",
+      "caseId": "trading-analysis-invalid-setup-001",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "trading-analysis",
+      "profileVersion": 1,
+      "outputId": "out-trading-analysis-invalid-setup-001-b",
+      "model": {
+        "model": "claude-haiku",
+        "provider": "claude",
+        "effort": "low",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "tidewater-instructions-v1",
+        "fingerprint": null,
+        "contextConfigId": "tidewater-rulebook-v1",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "methods": [
+        "manual"
+      ],
+      "evaluator": {
+        "type": "human",
+        "name": "Synthetic reviewer",
+        "version": null,
+        "date": "2026-10-13T09:00:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "rule-compliance",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Accepts a setup that TW-2 invalidates (turn-session gauge 0.62 < 0.80).",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "framework-fidelity",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Replaces the turn-session gauge rule with an invented \"overall reading\" across sessions; TW-2 is never cited.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "evidence-interpretation",
+          "outcome": "partial",
+          "rating": null,
+          "explanation": "Reads closes and S3’s low correctly, but dismisses the S4 gauge.",
+          "evidenceRefs": [
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "setup-classification",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Classifies an invalid pattern as an Ebb Reversal.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "insufficient-evidence",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "All needed values are present.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "unsupported-conclusions",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Calls it a \"strong setup\" and suggests a Flood Shelf could follow; the rules support neither.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "Mandatory rule-compliance failure.",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "createdAt": "2026-10-13T09:00:00Z"
+    }
+  ]
+}

@@ -147,3 +147,8 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Specialist Evaluation Lab: real evaluation data stays on this computer.
+/data/
+/lab-data/
+*.evallab-export.json

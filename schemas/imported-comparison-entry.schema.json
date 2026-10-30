@@ -1,0 +1,82 @@
+{
+  "$id": "eval-lab/imported-comparison-entry.schema.json",
+  "title": "imported-comparison-entry",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "entryId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+    },
+    "caseId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+    },
+    "caseVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "outputIds": {
+      "minItems": 2,
+      "maxItems": 6,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+      }
+    },
+    "overall": {
+      "type": "object",
+      "properties": {
+        "preferred": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000
+        }
+      },
+      "required": [
+        "preferred",
+        "reason"
+      ]
+    },
+    "perCriterion": {
+      "default": [],
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "criterionId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+          },
+          "preferred": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "reason": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "criterionId",
+          "preferred"
+        ]
+      }
+    }
+  },
+  "required": [
+    "entryId",
+    "caseId",
+    "caseVersion",
+    "outputIds",
+    "overall"
+  ]
+}

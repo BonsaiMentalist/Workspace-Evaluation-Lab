@@ -1,0 +1,383 @@
+{
+  "$id": "eval-lab/production-observation.schema.json",
+  "title": "production-observation",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "eval-lab/production-observation"
+    },
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure",
+        "correction",
+        "review",
+        "other"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "observedAt": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "specialistId": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "model": {
+      "default": {
+        "model": null,
+        "provider": null,
+        "effort": null,
+        "modelVersion": null
+      },
+      "type": "object",
+      "properties": {
+        "model": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provider": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effort": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "modelVersion": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "configuration": {
+      "default": {
+        "configurationId": null,
+        "fingerprint": null,
+        "contextConfigId": null,
+        "toolConfigIds": []
+      },
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fingerprint": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 200
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "contextConfigId": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "toolConfigIds": {
+          "default": [],
+          "maxItems": 50,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 100
+          }
+        }
+      }
+    },
+    "workspace": {
+      "default": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "type": "object",
+      "properties": {
+        "job": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "piece": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "phase": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "worker",
+                "review",
+                "master-check"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reply": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "chat": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "whatHappened": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10000
+    },
+    "evidence": {
+      "default": "",
+      "type": "string",
+      "maxLength": 10000
+    },
+    "confidence": {
+      "default": "unknown",
+      "type": "string",
+      "enum": [
+        "unknown",
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "uncertaintyNote": {
+      "default": "",
+      "type": "string",
+      "maxLength": 2000
+    },
+    "candidateCaseId": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "investigation": {
+      "default": "not-yet",
+      "type": "string",
+      "enum": [
+        "not-yet",
+        "investigating",
+        "investigated"
+      ]
+    },
+    "investigationNote": {
+      "default": "",
+      "type": "string",
+      "maxLength": 5000
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "enum": [
+            "synthetic",
+            "user"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "synthetic-suite",
+            "manual-entry",
+            "file-import",
+            "observation",
+            "runner-import"
+          ]
+        },
+        "sourceFile": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 260
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "importedAt": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "default": "",
+          "type": "string",
+          "maxLength": 2000
+        }
+      },
+      "required": [
+        "origin",
+        "source"
+      ]
+    },
+    "privacy": {
+      "type": "string",
+      "enum": [
+        "synthetic",
+        "local-private",
+        "shareable"
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+  },
+  "required": [
+    "schema",
+    "schemaVersion",
+    "id",
+    "type",
+    "source",
+    "whatHappened",
+    "provenance",
+    "privacy",
+    "createdAt"
+  ]
+}

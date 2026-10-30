@@ -1,0 +1,507 @@
+{
+  "schema": "eval-lab/export-bundle",
+  "schemaVersion": 1,
+  "exportedAt": "2026-10-20T08:00:00Z",
+  "app": {
+    "name": "Specialist Evaluation Lab",
+    "version": "0.1.0"
+  },
+  "profiles": [
+    {
+      "schema": "eval-lab/specialist-profile",
+      "schemaVersion": 1,
+      "id": "memory-retrieval",
+      "version": 1,
+      "name": "Memory retrieval (illustration)",
+      "purpose": "Illustrates how runner-style memory test cases map onto lab records.",
+      "capabilities": [
+        {
+          "id": "primary",
+          "name": "Retrieval",
+          "description": "",
+          "optional": false
+        }
+      ],
+      "criteria": [
+        {
+          "id": "finds-relevant-records",
+          "name": "Finds the relevant records",
+          "description": "",
+          "tier": "core",
+          "mandatory": true,
+          "capability": "primary",
+          "methods": [
+            "executable"
+          ],
+          "weight": 1,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": ""
+        },
+        {
+          "id": "leaves-out-irrelevant",
+          "name": "Leaves out irrelevant records",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "executable"
+          ],
+          "weight": 1,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": ""
+        }
+      ],
+      "changeNote": "",
+      "createdAt": "2026-10-20T08:00:00Z",
+      "origin": "synthetic"
+    }
+  ],
+  "cases": [
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "mem-garden-notes",
+      "version": 1,
+      "status": "evaluated",
+      "archived": false,
+      "split": "development",
+      "specialistId": "memory-retrieval",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Memory lookup: notes about the garden plan",
+      "task": "notes about the garden plan",
+      "context": [],
+      "contextNote": "A fictional memory store of twenty synthetic notes.",
+      "expected": {
+        "behaviour": "Return the notes about the topic and nothing else.",
+        "acceptanceCriteria": [
+          "All relevant notes returned",
+          "No unrelated notes returned"
+        ],
+        "referenceAnswer": "",
+        "answerKind": "objective"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "The runner’s expected-record list for this case.",
+          "contextItemId": null
+        }
+      ],
+      "methods": [
+        "executable"
+      ],
+      "checks": [],
+      "limitations": "None known.",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "runner-import",
+        "sourceFile": "runner-results-2026-10-20.json",
+        "importedAt": "2026-10-20T08:00:00Z",
+        "note": "Illustration only."
+      },
+      "privacy": "synthetic",
+      "tags": [],
+      "validation": {
+        "validatedAt": "2026-10-20T08:00:00Z",
+        "validatedBy": "memory test runner (illustrative name)",
+        "notes": "Imported frozen"
+      },
+      "freeze": {
+        "frozenAt": "2026-10-20T08:00:00Z",
+        "frozenBy": "memory test runner (illustrative name)",
+        "contentHash": "af31ee8afda7626f46c0b31d865aa8ea0b5570b23b61bbc19ece15805c2e3000",
+        "freezeSetId": null,
+        "freezeSetHash": null
+      },
+      "externalRef": {
+        "system": "workspace-memory-test-runner",
+        "id": "case-garden-notes"
+      },
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-10-20T08:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "mem-travel-dates",
+      "version": 1,
+      "status": "evaluated",
+      "archived": false,
+      "split": "held-out",
+      "specialistId": "memory-retrieval",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Memory lookup: notes about travel dates",
+      "task": "notes about travel dates",
+      "context": [],
+      "contextNote": "A fictional memory store of twenty synthetic notes.",
+      "expected": {
+        "behaviour": "Return the notes about the topic and nothing else.",
+        "acceptanceCriteria": [
+          "All relevant notes returned",
+          "No unrelated notes returned"
+        ],
+        "referenceAnswer": "",
+        "answerKind": "objective"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "The runner’s expected-record list for this case.",
+          "contextItemId": null
+        }
+      ],
+      "methods": [
+        "executable"
+      ],
+      "checks": [],
+      "limitations": "None known.",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "runner-import",
+        "sourceFile": "runner-results-2026-10-20.json",
+        "importedAt": "2026-10-20T08:00:00Z",
+        "note": "Illustration only."
+      },
+      "privacy": "synthetic",
+      "tags": [],
+      "validation": {
+        "validatedAt": "2026-10-20T08:00:00Z",
+        "validatedBy": "memory test runner (illustrative name)",
+        "notes": "Imported frozen"
+      },
+      "freeze": {
+        "frozenAt": "2026-10-20T08:00:00Z",
+        "frozenBy": "memory test runner (illustrative name)",
+        "contentHash": "ec15c7f44753f3ae445c759e10b65ea251770fa5e246c047749ec1ad99434803",
+        "freezeSetId": "held-out-freeze-2026-10",
+        "freezeSetHash": "728cc80ce34a368d1734b6c1d65c70b4480ae627e041bf55e319d3956c3c5eca"
+      },
+      "externalRef": {
+        "system": "workspace-memory-test-runner",
+        "id": "case-travel-dates"
+      },
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-10-20T08:00:00Z"
+    }
+  ],
+  "outputs": [
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-mem-garden-notes",
+      "caseId": "mem-garden-notes",
+      "caseVersion": 1,
+      "label": "Memory step 6 · retrieval config r12",
+      "text": "Returned note ids: n03, n07, n11.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": null,
+        "provider": null,
+        "effort": null,
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "memory-retrieval-r12",
+        "fingerprint": null,
+        "contextConfigId": null,
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "resources": {
+        "tokens": null,
+        "durationS": null,
+        "steps": null,
+        "provenance": {
+          "source": "unknown",
+          "note": ""
+        }
+      },
+      "producedAt": null,
+      "provenance": {
+        "origin": "synthetic",
+        "source": "runner-import",
+        "sourceFile": "runner-results-2026-10-20.json",
+        "importedAt": "2026-10-20T08:00:00Z",
+        "note": "Illustration only."
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-10-20T08:00:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-mem-travel-dates",
+      "caseId": "mem-travel-dates",
+      "caseVersion": 1,
+      "label": "Memory step 6 · retrieval config r12",
+      "text": "Returned note ids: n03, n07, n11.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": null,
+        "provider": null,
+        "effort": null,
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "memory-retrieval-r12",
+        "fingerprint": null,
+        "contextConfigId": null,
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "resources": {
+        "tokens": null,
+        "durationS": null,
+        "steps": null,
+        "provenance": {
+          "source": "unknown",
+          "note": ""
+        }
+      },
+      "producedAt": null,
+      "provenance": {
+        "origin": "synthetic",
+        "source": "runner-import",
+        "sourceFile": "runner-results-2026-10-20.json",
+        "importedAt": "2026-10-20T08:00:00Z",
+        "note": "Illustration only."
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-10-20T08:00:00Z"
+    }
+  ],
+  "results": [
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-mem-garden-notes",
+      "runId": "runner-run-2026-10-20",
+      "caseId": "mem-garden-notes",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "memory-retrieval",
+      "profileVersion": 1,
+      "outputId": "out-mem-garden-notes",
+      "model": {
+        "model": null,
+        "provider": null,
+        "effort": null,
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "memory-retrieval-r12",
+        "fingerprint": null,
+        "contextConfigId": null,
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "resources": {
+        "tokens": null,
+        "durationS": null,
+        "steps": null,
+        "provenance": {
+          "source": "unknown",
+          "note": ""
+        }
+      },
+      "methods": [
+        "executable"
+      ],
+      "evaluator": {
+        "type": "executable-runner",
+        "name": "memory test runner (illustrative name)",
+        "version": "r12",
+        "date": "2026-10-20T08:00:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "finds-relevant-records",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "All 3 expected notes returned.",
+          "evidenceRefs": [],
+          "method": "executable",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "leaves-out-irrelevant",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "No extra notes.",
+          "evidenceRefs": [],
+          "method": "executable",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overall": "pass",
+      "overallNote": "",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "review": {
+        "state": "not-required",
+        "decidedAt": null,
+        "decidedBy": null,
+        "via": null,
+        "note": "",
+        "originalFindings": null
+      },
+      "baseline": {
+        "runId": "runner-run-2026-10-13",
+        "resultId": null,
+        "label": "Saved baseline the run was compared against"
+      },
+      "knownFailure": null,
+      "importRef": null,
+      "provenance": {
+        "origin": "synthetic",
+        "source": "runner-import",
+        "sourceFile": "runner-results-2026-10-20.json",
+        "importedAt": "2026-10-20T08:00:00Z",
+        "note": "Illustration only."
+      },
+      "createdAt": "2026-10-20T08:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-mem-travel-dates",
+      "runId": "runner-run-2026-10-20",
+      "caseId": "mem-travel-dates",
+      "caseVersion": 1,
+      "split": "held-out",
+      "profileId": "memory-retrieval",
+      "profileVersion": 1,
+      "outputId": "out-mem-travel-dates",
+      "model": {
+        "model": null,
+        "provider": null,
+        "effort": null,
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "memory-retrieval-r12",
+        "fingerprint": null,
+        "contextConfigId": null,
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "resources": {
+        "tokens": null,
+        "durationS": null,
+        "steps": null,
+        "provenance": {
+          "source": "unknown",
+          "note": ""
+        }
+      },
+      "methods": [
+        "executable"
+      ],
+      "evaluator": {
+        "type": "executable-runner",
+        "name": "memory test runner (illustrative name)",
+        "version": "r12",
+        "date": "2026-10-20T08:00:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "finds-relevant-records",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Both expected notes returned.",
+          "evidenceRefs": [],
+          "method": "executable",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "leaves-out-irrelevant",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "One unrelated note returned; already on the runner’s known-failure list.",
+          "evidenceRefs": [],
+          "method": "executable",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overall": "fail",
+      "overallNote": "",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "review": {
+        "state": "not-required",
+        "decidedAt": null,
+        "decidedBy": null,
+        "via": null,
+        "note": "",
+        "originalFindings": null
+      },
+      "baseline": {
+        "runId": "runner-run-2026-10-13",
+        "resultId": null,
+        "label": "Saved baseline the run was compared against"
+      },
+      "knownFailure": {
+        "reference": "known-failure KF-2: travel notes over-match",
+        "since": "2026-10-06T00:00:00Z"
+      },
+      "importRef": null,
+      "provenance": {
+        "origin": "synthetic",
+        "source": "runner-import",
+        "sourceFile": "runner-results-2026-10-20.json",
+        "importedAt": "2026-10-20T08:00:00Z",
+        "note": "Illustration only."
+      },
+      "createdAt": "2026-10-20T08:00:00Z"
+    }
+  ],
+  "comparisons": [],
+  "observations": [],
+  "importBatches": [],
+  "note": "Illustration: lab records after importing runner cases and results. See docs/ARCHITECTURE.md, \"Importing from the existing test runner\"."
+}
