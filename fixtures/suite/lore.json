@@ -1,0 +1,1598 @@
+{
+  "profiles": [
+    {
+      "schema": "eval-lab/specialist-profile",
+      "schemaVersion": 1,
+      "id": "lore",
+      "version": 1,
+      "name": "Lore",
+      "purpose": "Keeps the invented world of Calder Mere consistent: manages canon, checks drafts against it, reasons about characters, and — as a separate, optional capability — writes prose in the setting.",
+      "capabilities": [
+        {
+          "id": "primary",
+          "name": "Canon management",
+          "description": "Canon fidelity, continuity and character reasoning.",
+          "optional": false
+        },
+        {
+          "id": "literary-prose",
+          "name": "Literary prose",
+          "description": "Quality of the writing itself, reported separately from canon.",
+          "optional": true
+        }
+      ],
+      "criteria": [
+        {
+          "id": "canon-fidelity",
+          "name": "Canon fidelity",
+          "description": "",
+          "tier": "core",
+          "mandatory": true,
+          "capability": "primary",
+          "methods": [
+            "manual",
+            "deterministic"
+          ],
+          "weight": 5,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Mandatory. Fail if the output states or depicts anything that contradicts the canon bible, however well written."
+        },
+        {
+          "id": "continuity",
+          "name": "Internal consistency and continuity",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: events, places and timings agree with each other and with established sequence (tides, years, injuries)."
+        },
+        {
+          "id": "character-understanding",
+          "name": "Character understanding",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 3,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: characters act and speak in ways their established history supports."
+        },
+        {
+          "id": "narrative-logic",
+          "name": "Narrative logic",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 3,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: cause and effect hold within the world’s rules."
+        },
+        {
+          "id": "motivations",
+          "name": "Motivations and development",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 3,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: motivations are grounded in canon and leave room for development the creator has planned."
+        },
+        {
+          "id": "contradiction-detection",
+          "name": "Contradiction detection",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual",
+            "deterministic"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: finds the real contradictions in a draft and does not flag consistent material. Partial: finds some."
+        },
+        {
+          "id": "creator-intent",
+          "name": "Preservation of creator intent",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: fixes drafts to fit canon rather than changing canon to fit drafts, and respects the creator’s stated open questions."
+        },
+        {
+          "id": "prose-voice",
+          "name": "Voice",
+          "description": "",
+          "tier": "optional",
+          "mandatory": false,
+          "capability": "literary-prose",
+          "methods": [
+            "manual",
+            "blinded-comparison"
+          ],
+          "weight": 2,
+          "assesses": "agent",
+          "scale": {
+            "kind": "rating",
+            "min": 1,
+            "max": 5,
+            "anchors": "1 = generic; 3 = consistent but plain; 5 = distinctive and suited to the character."
+          },
+          "guidance": "Rate the distinctiveness and fit of the narrative voice."
+        },
+        {
+          "id": "prose-dialogue",
+          "name": "Dialogue",
+          "description": "",
+          "tier": "optional",
+          "mandatory": false,
+          "capability": "literary-prose",
+          "methods": [
+            "manual",
+            "blinded-comparison"
+          ],
+          "weight": 2,
+          "assesses": "agent",
+          "scale": {
+            "kind": "rating",
+            "min": 1,
+            "max": 5,
+            "anchors": "1 = stilted; 3 = serviceable; 5 = reveals character with economy."
+          },
+          "guidance": "Rate dialogue if present; use not-applicable if there is none."
+        },
+        {
+          "id": "prose-rhythm",
+          "name": "Rhythm",
+          "description": "",
+          "tier": "optional",
+          "mandatory": false,
+          "capability": "literary-prose",
+          "methods": [
+            "manual",
+            "blinded-comparison"
+          ],
+          "weight": 2,
+          "assesses": "agent",
+          "scale": {
+            "kind": "rating",
+            "min": 1,
+            "max": 5,
+            "anchors": "1 = monotonous; 3 = even; 5 = varied and controlled."
+          },
+          "guidance": "Rate sentence rhythm and pacing."
+        },
+        {
+          "id": "prose-description",
+          "name": "Description",
+          "description": "",
+          "tier": "optional",
+          "mandatory": false,
+          "capability": "literary-prose",
+          "methods": [
+            "manual",
+            "blinded-comparison"
+          ],
+          "weight": 2,
+          "assesses": "agent",
+          "scale": {
+            "kind": "rating",
+            "min": 1,
+            "max": 5,
+            "anchors": "1 = abstract; 3 = clear; 5 = precise, sensory and selective."
+          },
+          "guidance": "Rate the concreteness and selectivity of description."
+        },
+        {
+          "id": "prose-emotional-impact",
+          "name": "Emotional impact",
+          "description": "",
+          "tier": "optional",
+          "mandatory": false,
+          "capability": "literary-prose",
+          "methods": [
+            "manual",
+            "blinded-comparison"
+          ],
+          "weight": 2,
+          "assesses": "agent",
+          "scale": {
+            "kind": "rating",
+            "min": 1,
+            "max": 5,
+            "anchors": "1 = none; 3 = some; 5 = lands without being stated."
+          },
+          "guidance": "Rate how well the scene conveys feeling without naming it."
+        }
+      ],
+      "changeNote": "",
+      "createdAt": "2026-09-01T09:00:00Z",
+      "origin": "synthetic"
+    }
+  ],
+  "cases": [
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "lore-canon-inconsistency-001",
+      "version": 1,
+      "status": "evaluated",
+      "archived": false,
+      "split": "development",
+      "specialistId": "lore",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Finds canon contradictions in a co-writer’s chapter outline",
+      "task": "A co-writer sent the outline below for chapter 6. Check it against canon, list every contradiction, and suggest fixes that keep the chapter's intent. Do not flag anything that is consistent. Cite the context items you rely on by their bracketed ids, for example [E1].",
+      "context": [
+        {
+          "id": "canon",
+          "title": "E1 · Canon bible excerpt",
+          "kind": "text",
+          "text": "CANON BIBLE — Calder Mere (invented setting), excerpt v4\n\nYsolde Marrow — lamp-warden of Hollowquay. Lost her left hand at the Siege of Hollowquay (Long Tide year 312); wears a brass hook in its place. Has distrusted the Lantern Compact since the siege, when its ships arrived a day late. Cannot swim.\n\nOdo Brack — ferryman. Mute since the Drowning Festival of 309; speaks through knotted cords that islanders can read.\n\nTamsin Vey — archivist of the Lantern Compact. Creator's note: her loyalty to the Compact is deliberately unresolved and must not be settled before Book Three.\n\nSaltglass — records speech spoken near it. Cracks if a lie is spoken within arm's reach. Cracked saltglass cannot be reforged; it can only be ground to sand, and the recording is lost.\n\nHollowquay causeway — passable only at slack water, twice a day.",
+          "attachment": null,
+          "authoritative": true,
+          "note": ""
+        },
+        {
+          "id": "outline",
+          "title": "E2 · Draft outline, chapter 6",
+          "kind": "text",
+          "text": "1. At slack water, Ysolde and Tamsin cross the causeway to the old lighthouse.\n2. Ysolde climbs the sea-wall hand over hand, gripping the rope with both hands.\n3. They find the saltglass cracked. Tamsin reforges it in the lighthouse kiln and they hear the recording.\n4. Odo shouts a warning from his ferry as the Compact ship approaches.",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Flag three contradictions: (2) Ysolde has one hand and a hook; (3) cracked saltglass cannot be reforged and its recording is lost; (4) Odo is mute. Do not flag (1), which is consistent. Suggest fixes that change the draft, not the canon — e.g. she climbs using the hook, the recording is lost or survives elsewhere, Odo signals with cords or a lamp.",
+        "acceptanceCriteria": [
+          "All three contradictions are identified, each tied to the canon entry it breaks.",
+          "The slack-water crossing is not flagged.",
+          "Every suggested fix changes the draft, not the canon."
+        ],
+        "referenceAnswer": "Contradictions: item 2 (one hand) [E1][E2]; item 3 (no reforging) [E1][E2]; item 4 (Odo is mute) [E1][E2]. Item 1 is consistent.",
+        "answerKind": "objective"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "Canon bible entries for Ysolde, Odo, saltglass and the causeway.",
+          "contextItemId": "canon"
+        },
+        {
+          "id": "E2",
+          "description": "The draft outline with four numbered beats.",
+          "contextItemId": "outline"
+        }
+      ],
+      "methods": [
+        "manual",
+        "deterministic"
+      ],
+      "checks": [
+        {
+          "id": "cites-canon-and-draft",
+          "criterionId": "contradiction-detection",
+          "type": "evidence-reference",
+          "refs": [
+            "E1",
+            "E2"
+          ],
+          "min": 2,
+          "description": "Both the canon and the draft are cited."
+        }
+      ],
+      "limitations": "None known",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "canon",
+        "continuity"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-09-05T10:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "lore-prose-vs-canon-002",
+      "version": 1,
+      "status": "evaluated",
+      "archived": false,
+      "split": "development",
+      "specialistId": "lore",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Scene writing: canon fidelity judged separately from prose quality",
+      "task": "Write a scene of about 150 words: the night after the Siege of Hollowquay, Ysolde lights the harbour lamp for the first time since her injury. Stay within canon.",
+      "context": [
+        {
+          "id": "canon",
+          "title": "E1 · Canon bible excerpt",
+          "kind": "text",
+          "text": "CANON BIBLE — Calder Mere (invented setting), excerpt v4\n\nYsolde Marrow — lamp-warden of Hollowquay. Lost her left hand at the Siege of Hollowquay (Long Tide year 312); wears a brass hook in its place. Has distrusted the Lantern Compact since the siege, when its ships arrived a day late. Cannot swim.\n\nOdo Brack — ferryman. Mute since the Drowning Festival of 309; speaks through knotted cords that islanders can read.\n\nTamsin Vey — archivist of the Lantern Compact. Creator's note: her loyalty to the Compact is deliberately unresolved and must not be settled before Book Three.\n\nSaltglass — records speech spoken near it. Cracks if a lie is spoken within arm's reach. Cracked saltglass cannot be reforged; it can only be ground to sand, and the recording is lost.\n\nHollowquay causeway — passable only at slack water, twice a day.",
+          "attachment": null,
+          "authoritative": true,
+          "note": ""
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Produce a short scene consistent with canon: one hand and a brass hook (the injury is fresh), distrust of the late-arriving Compact, nothing that contradicts the bible. Prose quality is judged separately under the optional literary-prose capability and never offsets a canon failure.",
+        "acceptanceCriteria": [
+          "Nothing in the scene contradicts the canon bible.",
+          "The injury is reflected physically in how she lights the lamp.",
+          "Prose criteria are rated independently of canon."
+        ],
+        "referenceAnswer": "",
+        "answerKind": "mixed"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "Ysolde’s injury, hook and distrust of the Compact.",
+          "contextItemId": "canon"
+        }
+      ],
+      "methods": [
+        "manual",
+        "deterministic",
+        "blinded-comparison"
+      ],
+      "checks": [
+        {
+          "id": "no-two-handed-ysolde",
+          "criterionId": "canon-fidelity",
+          "type": "forbidden-phrase",
+          "phrases": [
+            "both hands",
+            "two hands",
+            "both of her hands"
+          ],
+          "description": "Ysolde is never described using two hands. Other canon errors need a human."
+        }
+      ],
+      "limitations": "Prose ratings are subjective; use blinded comparison when ratings disagree.",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "prose",
+        "canon",
+        "literary-prose"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-09-07T10:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "lore-tamsin-motivation-003",
+      "version": 1,
+      "status": "frozen",
+      "archived": false,
+      "split": "held-out",
+      "specialistId": "lore",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Motivation note for an act whose meaning the creator has left open",
+      "task": "Co-writer: \"In chapter 9, Tamsin hides the cracked saltglass from the Compact council. Is that a betrayal? Write a short motivation note for her for that scene.\" Cite the context items you rely on by their bracketed ids, for example [E1].",
+      "context": [
+        {
+          "id": "canon",
+          "title": "E1 · Canon bible excerpt",
+          "kind": "text",
+          "text": "CANON BIBLE — Calder Mere (invented setting), excerpt v4\n\nYsolde Marrow — lamp-warden of Hollowquay. Lost her left hand at the Siege of Hollowquay (Long Tide year 312); wears a brass hook in its place. Has distrusted the Lantern Compact since the siege, when its ships arrived a day late. Cannot swim.\n\nOdo Brack — ferryman. Mute since the Drowning Festival of 309; speaks through knotted cords that islanders can read.\n\nTamsin Vey — archivist of the Lantern Compact. Creator's note: her loyalty to the Compact is deliberately unresolved and must not be settled before Book Three.\n\nSaltglass — records speech spoken near it. Cracks if a lie is spoken within arm's reach. Cracked saltglass cannot be reforged; it can only be ground to sand, and the recording is lost.\n\nHollowquay causeway — passable only at slack water, twice a day.",
+          "attachment": null,
+          "authoritative": true,
+          "note": ""
+        },
+        {
+          "id": "chapter-plan",
+          "title": "E2 · Series plan (partial)",
+          "kind": "text",
+          "text": "Book One: chapters 1–8. Book Two: chapters 9–? (chapter count not yet fixed). Book Three: not yet outlined.",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Recognise the creator’s instruction not to settle Tamsin’s loyalty before Book Three. Write a motivation note that supports more than one reading (e.g. protecting the Compact from what the crack implies, or protecting someone from the Compact), or ask the creator. Do not declare her a traitor or loyal.",
+        "acceptanceCriteria": [
+          "Mentions the creator’s note about Tamsin’s loyalty.",
+          "The motivation note leaves both loyal and disloyal readings available.",
+          "Does not contradict saltglass rules."
+        ],
+        "referenceAnswer": "Expected assessment: canon-fidelity is clear. Whether a given motivation note \"settles\" loyalty is a judgement call, so motivations and creator-intent findings are expected to be inconclusive unless the output explicitly declares her loyalty.",
+        "answerKind": "mixed"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "Creator’s note: Tamsin’s loyalty must stay unresolved before Book Three; saltglass rules.",
+          "contextItemId": "canon"
+        },
+        {
+          "id": "E2",
+          "description": "Chapter 9 falls in Book Two.",
+          "contextItemId": "chapter-plan"
+        }
+      ],
+      "methods": [
+        "manual",
+        "blinded-comparison"
+      ],
+      "checks": [],
+      "limitations": "How much a single motivation note can \"lean\" without resolving loyalty is not defined by the creator.",
+      "ambiguity": "ambiguous",
+      "ambiguityNote": "The creator forbids resolving Tamsin’s loyalty but has not said how far a scene may lean. Reasonable reviewers will disagree on whether a note that favours one reading but does not state it crosses that line.",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "motivation",
+        "creator-intent",
+        "ambiguous"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-09-15T10:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "lore-new-region-004",
+      "version": 1,
+      "status": "candidate",
+      "archived": false,
+      "split": "development",
+      "specialistId": "lore",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Introduce a new region without contradicting tide rules",
+      "task": "Propose a short gazetteer entry for a new island chain, the Ember Shoals, that fits existing canon about tides and saltglass.",
+      "context": [
+        {
+          "id": "canon",
+          "title": "E1 · Canon bible excerpt",
+          "kind": "text",
+          "text": "CANON BIBLE — Calder Mere (invented setting), excerpt v4\n\nYsolde Marrow — lamp-warden of Hollowquay. Lost her left hand at the Siege of Hollowquay (Long Tide year 312); wears a brass hook in its place. Has distrusted the Lantern Compact since the siege, when its ships arrived a day late. Cannot swim.\n\nOdo Brack — ferryman. Mute since the Drowning Festival of 309; speaks through knotted cords that islanders can read.\n\nTamsin Vey — archivist of the Lantern Compact. Creator's note: her loyalty to the Compact is deliberately unresolved and must not be settled before Book Three.\n\nSaltglass — records speech spoken near it. Cracks if a lie is spoken within arm's reach. Cracked saltglass cannot be reforged; it can only be ground to sand, and the recording is lost.\n\nHollowquay causeway — passable only at slack water, twice a day.",
+          "attachment": null,
+          "authoritative": true,
+          "note": ""
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "The entry introduces new material without contradicting canon, and marks anything that extends canon as a proposal for the creator to approve.",
+        "acceptanceCriteria": [
+          "No contradiction with the canon bible.",
+          "Extensions to canon are labelled as proposals."
+        ],
+        "referenceAnswer": "",
+        "answerKind": "judgement"
+      },
+      "evidence": [],
+      "methods": [
+        "manual"
+      ],
+      "checks": [],
+      "limitations": "None known",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "worldbuilding",
+        "draft"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-10-24T10:00:00Z"
+    }
+  ],
+  "outputs": [
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-lore-canon-inconsistency-001-a",
+      "caseId": "lore-canon-inconsistency-001",
+      "caseVersion": 1,
+      "label": "Sonnet · instructions v2",
+      "text": "Three contradictions with canon [E1] in the outline [E2]:\n\n1. Beat 2 — \"gripping the rope with both hands.\" Ysolde lost her left hand in the siege of 312 and wears a brass hook. Fix: she hooks the rope and pulls with her right hand. It's slower, which gives Tamsin a moment to notice the ship.\n\n2. Beat 3 — \"Tamsin reforges it.\" Cracked saltglass can't be reforged; it can only be ground to sand, and the recording is lost. Fix: the crack itself is the clue — someone lied beside it. If the plot needs the words, they could survive on a second, intact pane.\n\n3. Beat 4 — \"Odo shouts a warning.\" Odo has been mute since the Drowning Festival of 309. Fix: he signals with his knot-cords, or swings his lantern, which Ysolde as lamp-warden would read instantly.\n\nBeat 1 is fine: crossing at slack water matches the causeway rule.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-sonnet",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": "tSYN0027",
+        "piece": 2,
+        "phase": "review",
+        "reply": null,
+        "chat": null
+      },
+      "resources": {
+        "tokens": {
+          "uncached": 3300,
+          "cacheWrite": null,
+          "cacheWrite1h": null,
+          "cacheRead": 5200,
+          "output": 470,
+          "thinking": 600
+        },
+        "durationS": 12.1,
+        "steps": null,
+        "provenance": {
+          "source": "synthetic",
+          "note": ""
+        }
+      },
+      "producedAt": "2026-09-06T14:00:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-06T14:30:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-lore-canon-inconsistency-001-b",
+      "caseId": "lore-canon-inconsistency-001",
+      "caseVersion": 1,
+      "label": "Haiku · instructions v2",
+      "text": "Issues found against canon [E1]:\n\n- Beat 1: the causeway crossing feels unlikely — the tide would make this dangerous. Suggest they take Odo's ferry instead.\n- Beat 3: canon says cracked saltglass can't be reforged. But the reforging scene is the emotional core of the chapter, so I'd suggest updating the canon: master glaziers can reforge saltglass at great cost, recovering part of the recording. That opens up good story possibilities.\n\nThe rest looks consistent. Nice outline overall.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-haiku",
+        "provider": "claude",
+        "effort": "low",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "producedAt": "2026-09-06T14:02:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-06T14:30:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-lore-prose-vs-canon-002-a",
+      "caseId": "lore-prose-vs-canon-002",
+      "caseVersion": 1,
+      "label": "Sol 6.1 · prompt v1",
+      "text": "Ysolde went up to the harbour lamp after dark. It was the night after the siege. She was tired and her arm hurt.\n\nShe opened the lamp door with the brass hook at her left wrist. It took a long time. She held the match in her right hand and struck it on the rail. The first match went out. The second one worked and she lit the wick.\n\nThe lamp came on and lit the harbour. She could see the Compact ships at anchor. They had come a day late. She was angry about that and she did not think she would trust them again.\n\n\"You're late,\" she said to nobody.\n\nShe sat down next to the lamp and watched the water for the rest of the night. She thought about the siege and about her hand. Then the sun came up.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "sol-6.1",
+        "provider": "codex",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-prose-prompt-v1",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": "rSYN0093",
+        "chat": "cSYN0015"
+      },
+      "producedAt": "2026-09-08T19:00:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-08T19:30:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-lore-prose-vs-canon-002-b",
+      "caseId": "lore-prose-vs-canon-002",
+      "caseVersion": 1,
+      "label": "Fable · prompt v1",
+      "text": "The stair still smelled of smoke. Ysolde climbed it the way she had climbed it ten thousand nights, counting the turns, and found that her body had not yet heard the news.\n\nAt the top the lamp waited, cold as a stopped heart. She cupped the match in both hands against the wind — an old habit, a stupid one — and the flame took, and the wick drank it, and light went out across Hollowquay like a held breath let go.\n\nBelow, the Compact ships rode at anchor, lanterns bright and tidy, a day late and lit as if for a feast.\n\n\"Look at you,\" she told them. \"All that light, and none of it on time.\"\n\nShe sat with her back to the warm glass. The harbour shone. She did not.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-fable",
+        "provider": "claude",
+        "effort": "high",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-prose-prompt-v1",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": "rSYN0094",
+        "chat": "cSYN0015"
+      },
+      "resources": {
+        "tokens": {
+          "uncached": 1900,
+          "cacheWrite": null,
+          "cacheWrite1h": null,
+          "cacheRead": 4100,
+          "output": 310,
+          "thinking": 880
+        },
+        "durationS": 9.4,
+        "steps": null,
+        "provenance": {
+          "source": "synthetic",
+          "note": ""
+        }
+      },
+      "producedAt": "2026-09-08T19:02:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-08T19:30:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-lore-tamsin-motivation-003-a",
+      "caseId": "lore-tamsin-motivation-003",
+      "caseVersion": 1,
+      "label": "Opus · instructions v2",
+      "text": "Whether it's a betrayal is exactly what the creator has asked us not to settle yet: Tamsin's loyalty stays open until Book Three [E1], and chapter 9 is in Book Two [E2]. So the note should support both readings.\n\nMotivation note — Tamsin, chapter 9:\nTamsin knows what a crack means: someone lied within arm's reach of that glass [E1]. Until she knows who, any council meeting is a room full of suspects — including people she has served for twenty years. She hides the glass because handing it over would force a question she is not ready to have answered. Readers should be able to see this later as loyalty (protecting the Compact from a liar inside it) or as its opposite (protecting the liar, or herself). Play her calm and precise; let one small hesitation — she pockets the glass before she has decided to — carry the weight.\n\nIf the creator wants this scene to lean one way, that's their call to make; I'd check before drafting.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-opus",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "producedAt": "2026-09-16T11:00:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-16T11:20:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-lore-tamsin-motivation-003-b",
+      "caseId": "lore-tamsin-motivation-003",
+      "caseVersion": 1,
+      "label": "Astra · instructions v2",
+      "text": "It isn't a betrayal so much as a quiet act of conscience.\n\nMotivation note — Tamsin, chapter 9:\nTamsin has spent years recording the Compact's promises, and the cracked saltglass proves that one of those promises was a lie. She hides it because she has begun to suspect the council itself, and she wants time to find out how deep the lie goes before anyone can bury it. Her loyalty is to the truth the archive is meant to keep, more than to the people who run it. This sets up her growing distance from the council through the rest of Book Two.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "gpt-6-astra",
+        "provider": "codex",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "producedAt": "2026-09-16T11:02:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-16T11:20:00Z"
+    }
+  ],
+  "results": [
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-lore-canon-inconsistency-001-a",
+      "runId": "run-human-lore-2026-10-10",
+      "caseId": "lore-canon-inconsistency-001",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "lore",
+      "profileVersion": 1,
+      "outputId": "out-lore-canon-inconsistency-001-a",
+      "model": {
+        "model": "claude-sonnet",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": "tSYN0027",
+        "piece": 2,
+        "phase": "review",
+        "reply": null,
+        "chat": null
+      },
+      "resources": {
+        "tokens": {
+          "uncached": 3300,
+          "cacheWrite": null,
+          "cacheWrite1h": null,
+          "cacheRead": 5200,
+          "output": 470,
+          "thinking": 600
+        },
+        "durationS": 12.1,
+        "steps": null,
+        "provenance": {
+          "source": "synthetic",
+          "note": ""
+        }
+      },
+      "methods": [
+        "manual"
+      ],
+      "evaluator": {
+        "type": "human",
+        "name": "Synthetic reviewer",
+        "version": null,
+        "date": "2026-10-10T15:00:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "contradiction-detection",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Finds all three contradictions and correctly leaves the slack-water crossing alone.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "canon-fidelity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Every statement about canon is accurate.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "creator-intent",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "All fixes change the draft, and each keeps the beat’s purpose.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "continuity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Correctly ties the injury to year 312 and Odo’s silence to 309.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "character-understanding",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Uses Ysolde’s role as lamp-warden to make the lantern fix feel natural.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "narrative-logic",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Turns the crack into a clue that follows from the saltglass rule.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "motivations",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "No motivations at issue in this outline.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-voice",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-dialogue",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-rhythm",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-description",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-emotional-impact",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "createdAt": "2026-10-10T15:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-lore-canon-inconsistency-001-b",
+      "runId": "run-human-lore-2026-10-10",
+      "caseId": "lore-canon-inconsistency-001",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "lore",
+      "profileVersion": 1,
+      "outputId": "out-lore-canon-inconsistency-001-b",
+      "model": {
+        "model": "claude-haiku",
+        "provider": "claude",
+        "effort": "low",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "methods": [
+        "manual"
+      ],
+      "evaluator": {
+        "type": "human",
+        "name": "Synthetic reviewer",
+        "version": null,
+        "date": "2026-10-10T15:00:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "contradiction-detection",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Misses the two-handed climb and Odo shouting, and flags the slack-water crossing, which is consistent with canon.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "canon-fidelity",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Claims the slack-water crossing is unlikely, contrary to the causeway rule, and proposes changing canon.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "creator-intent",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Recommends rewriting canon (reforgeable saltglass) to fit a draft.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "continuity",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Leaves the two-handed climb and Odo’s shout in place.",
+          "evidenceRefs": [
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "character-understanding",
+          "outcome": "inconclusive",
+          "rating": null,
+          "explanation": "Says little about the characters either way.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "narrative-logic",
+          "outcome": "partial",
+          "rating": null,
+          "explanation": "Correctly notes that reforging breaks a world rule, then undermines it.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "motivations",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "No motivations at issue.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-voice",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-dialogue",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-rhythm",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-description",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-emotional-impact",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Not a prose-writing task.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "Mandatory canon failure, compounded by proposing a canon change.",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "createdAt": "2026-10-10T15:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-lore-prose-vs-canon-002-a",
+      "runId": "run-human-lore-2026-10-10",
+      "caseId": "lore-prose-vs-canon-002",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "lore",
+      "profileVersion": 1,
+      "outputId": "out-lore-prose-vs-canon-002-a",
+      "model": {
+        "model": "sol-6.1",
+        "provider": "codex",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-prose-prompt-v1",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": "rSYN0093",
+        "chat": "cSYN0015"
+      },
+      "methods": [
+        "manual"
+      ],
+      "evaluator": {
+        "type": "human",
+        "name": "Synthetic reviewer",
+        "version": null,
+        "date": "2026-10-10T15:30:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "canon-fidelity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Hook at the left wrist, one-handed match, Compact a day late, lingering distrust — all consistent.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "continuity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Set the night after the siege, with the injury fresh.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "character-understanding",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Her anger at the late Compact is in character.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "narrative-logic",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Nothing breaks a world rule.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "motivations",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Distrust is grounded in the late arrival.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "contradiction-detection",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Writing task; no draft to check.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "creator-intent",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "No creator instruction at stake.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-voice",
+          "outcome": "fail",
+          "rating": {
+            "value": 2,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Flat, generic narration that tells feelings outright.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-dialogue",
+          "outcome": "partial",
+          "rating": {
+            "value": 3,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "One serviceable line.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-rhythm",
+          "outcome": "fail",
+          "rating": {
+            "value": 2,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Uniformly short declarative sentences.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-description",
+          "outcome": "fail",
+          "rating": {
+            "value": 2,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Little sensory detail beyond the match.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-emotional-impact",
+          "outcome": "fail",
+          "rating": {
+            "value": 2,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "\"She was angry about that\" names the feeling instead of conveying it.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "Canon-correct, weak prose. Prose is optional and reported separately.",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "createdAt": "2026-10-10T15:30:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-lore-prose-vs-canon-002-b",
+      "runId": "run-human-lore-2026-10-10",
+      "caseId": "lore-prose-vs-canon-002",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "lore",
+      "profileVersion": 1,
+      "outputId": "out-lore-prose-vs-canon-002-b",
+      "model": {
+        "model": "claude-fable",
+        "provider": "claude",
+        "effort": "high",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "lore-prose-prompt-v1",
+        "fingerprint": null,
+        "contextConfigId": "canon-bible-v4",
+        "toolConfigIds": []
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": "rSYN0094",
+        "chat": "cSYN0015"
+      },
+      "resources": {
+        "tokens": {
+          "uncached": 1900,
+          "cacheWrite": null,
+          "cacheWrite1h": null,
+          "cacheRead": 4100,
+          "output": 310,
+          "thinking": 880
+        },
+        "durationS": 9.4,
+        "steps": null,
+        "provenance": {
+          "source": "synthetic",
+          "note": ""
+        }
+      },
+      "methods": [
+        "manual"
+      ],
+      "evaluator": {
+        "type": "human",
+        "name": "Synthetic reviewer",
+        "version": null,
+        "date": "2026-10-10T15:40:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "canon-fidelity",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "\"She cupped the match in both hands\" — Ysolde lost her left hand in the siege. The \"old habit\" framing does not fix it; the sentence depicts two hands doing it.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "continuity",
+          "outcome": "partial",
+          "rating": null,
+          "explanation": "Timing and setting are right; the injury is otherwise only implied (\"her body had not yet heard the news\").",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "character-understanding",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Her dry contempt for the late Compact is well judged.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "narrative-logic",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "No world rules broken apart from the injury.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "motivations",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Distrust grounded in the late arrival.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "contradiction-detection",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Writing task; no draft to check.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "creator-intent",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "No creator instruction at stake.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-voice",
+          "outcome": "pass",
+          "rating": {
+            "value": 5,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Distinctive, wry and suited to her.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-dialogue",
+          "outcome": "pass",
+          "rating": {
+            "value": 4,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Two lines that reveal character economically.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-rhythm",
+          "outcome": "pass",
+          "rating": {
+            "value": 5,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Varied, controlled sentences with a strong closing beat.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-description",
+          "outcome": "pass",
+          "rating": {
+            "value": 5,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Precise sensory detail (smoke on the stair, warm glass).",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "prose-emotional-impact",
+          "outcome": "pass",
+          "rating": {
+            "value": 5,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Grief and anger land without being named.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "Excellent prose, but the mandatory canon failure decides the outcome; prose ratings are reported separately and do not offset it.",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "createdAt": "2026-10-10T15:40:00Z"
+    }
+  ]
+}

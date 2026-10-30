@@ -1,0 +1,36 @@
+{
+  "name": "specialist-evaluation-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-first lab for evaluating saved outputs of AI models and specialist agents.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "start": "tsx src/server/main.ts",
+    "start:no-browser": "tsx src/server/main.ts --no-browser",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "schemas": "tsx scripts/write-schemas.ts",
+    "screenshots": "node scripts/screenshots.mjs",
+    "check-fixtures": "tsx scripts/check-fixtures.ts",
+    "examples": "tsx scripts/make-examples.ts"
+  },
+  "dependencies": {
+    "express": "~5.2.1",
+    "multer": "~2.5.0",
+    "open": "~10.2.0",
+    "tsx": "~4.20.3",
+    "zod": "~4.6.7"
+  },
+  "devDependencies": {
+    "@types/express": "~5.0.3",
+    "@types/multer": "~2.0.0",
+    "@types/node": "~22.18.0",
+    "@types/supertest": "~6.0.3",
+    "supertest": "~7.1.4",
+    "typescript": "~5.9.2",
+    "vitest": "~5.0.5"
+  }
+}

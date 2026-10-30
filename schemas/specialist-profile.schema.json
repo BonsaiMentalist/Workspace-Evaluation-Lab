@@ -1,0 +1,223 @@
+{
+  "$id": "eval-lab/specialist-profile.schema.json",
+  "title": "specialist-profile",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "eval-lab/specialist-profile"
+    },
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "purpose": {
+      "default": "",
+      "type": "string",
+      "maxLength": 2000
+    },
+    "capabilities": {
+      "minItems": 1,
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "description": {
+            "default": "",
+            "type": "string",
+            "maxLength": 1000
+          },
+          "optional": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      }
+    },
+    "criteria": {
+      "minItems": 1,
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "description": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "core",
+              "optional"
+            ]
+          },
+          "mandatory": {
+            "default": false,
+            "type": "boolean"
+          },
+          "capability": {
+            "default": "primary",
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+          },
+          "methods": {
+            "minItems": 1,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "deterministic",
+                "manual",
+                "blinded-comparison",
+                "executable"
+              ]
+            }
+          },
+          "weight": {
+            "default": 1,
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "assesses": {
+            "default": "agent",
+            "type": "string",
+            "enum": [
+              "agent",
+              "tool-output",
+              "combined"
+            ]
+          },
+          "scale": {
+            "default": {
+              "kind": "outcome"
+            },
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "outcome"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "rating"
+                  },
+                  "min": {
+                    "type": "integer",
+                    "minimum": -100,
+                    "maximum": 100
+                  },
+                  "max": {
+                    "type": "integer",
+                    "minimum": -100,
+                    "maximum": 100
+                  },
+                  "anchors": {
+                    "default": "",
+                    "type": "string",
+                    "maxLength": 1000
+                  }
+                },
+                "required": [
+                  "kind",
+                  "min",
+                  "max"
+                ]
+              }
+            ]
+          },
+          "guidance": {
+            "default": "",
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tier",
+          "methods"
+        ]
+      }
+    },
+    "changeNote": {
+      "default": "",
+      "type": "string",
+      "maxLength": 2000
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "origin": {
+      "type": "string",
+      "enum": [
+        "synthetic",
+        "user"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "schemaVersion",
+    "id",
+    "version",
+    "name",
+    "capabilities",
+    "criteria",
+    "createdAt",
+    "origin"
+  ]
+}

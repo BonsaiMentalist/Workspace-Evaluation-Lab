@@ -1,0 +1,30 @@
+{
+  "schema": "eval-lab/evaluation-result",
+  "schemaVersion": 1,
+  "id": "res-example-join-001",
+  "runId": "run-example-join-001",
+  "caseId": "engineering-date-range-001",
+  "caseVersion": 1,
+  "split": "development",
+  "profileId": "engineering",
+  "profileVersion": 2,
+  "outputId": "out-example-join-001",
+  "model": { "model": "claude-sonnet", "provider": "claude", "effort": "high", "modelVersion": null },
+  "configuration": { "configurationId": "engineering-instructions-v4", "fingerprint": null, "contextConfigId": "ctx-default", "toolConfigIds": [] },
+  "workspace": { "job": "tSYN9001", "piece": 1, "phase": "worker", "reply": null, "chat": null },
+  "resources": {
+    "tokens": { "uncached": 18240, "cacheWrite": 6100, "cacheWrite1h": null, "cacheRead": 92400, "output": 3120, "thinking": 1480 },
+    "durationS": 211,
+    "steps": 14,
+    "provenance": { "source": "synthetic", "note": "Made-up numbers for this example." }
+  },
+  "methods": ["manual"],
+  "evaluator": { "type": "human", "name": "Synthetic reviewer", "version": null, "date": "2026-10-20T10:00:00Z" },
+  "findings": [
+    { "criterionId": "technical-correctness", "outcome": "pass", "explanation": "Fixes the boundary in the date-range function.", "evidenceRefs": ["E1"], "method": "manual" },
+    { "criterionId": "root-cause", "outcome": "pass", "explanation": "Names the off-by-one as the cause, not the symptom.", "evidenceRefs": [], "method": "manual" }
+  ],
+  "overall": "incomplete",
+  "provenance": { "origin": "synthetic", "source": "synthetic-suite", "sourceFile": null, "importedAt": null, "note": "Example of the Workspace Analytics join. Not loaded into the lab." },
+  "createdAt": "2026-10-20T10:00:00Z"
+}

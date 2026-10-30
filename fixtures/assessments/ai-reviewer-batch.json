@@ -1,0 +1,806 @@
+{
+  "schema": "eval-lab/imported-assessment-batch",
+  "schemaVersion": 1,
+  "batchId": "batch-synthetic-ai-review-001",
+  "producedAt": "2026-10-21T08:30:00Z",
+  "evaluator": {
+    "type": "ai-reviewer",
+    "name": "Synthetic AI reviewer",
+    "version": "reviewer-config-7",
+    "date": "2026-10-21T08:30:00Z"
+  },
+  "assessments": [
+    {
+      "entryId": "entry-master-delegation-001-a",
+      "caseId": "master-delegation-001",
+      "caseVersion": 1,
+      "outputId": "out-master-delegation-001-a",
+      "profileVersion": null,
+      "findings": [
+        {
+          "criterionId": "delegation",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Routes the work to Engineering with a structured brief instead of proposing a fix.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "authorization",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Carries the billing restriction as a hard boundary with a stop-and-report rule.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "understand-intent",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Addresses the timeout, the deadline and the constraint.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "model-tool-selection",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Proportionate model choice with a stated escalation condition.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "continuity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Links the earlier pagination job tSYN0031 as a lead.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "avoid-overhead",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Tells the owner nothing more is needed from them.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "info-needed",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Asks for reproduction rather than guessing at the cause.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "verify-status",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "No status reported.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "work-ordering",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Single job.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "",
+      "limitations": "Assessed from the output text and case context only."
+    },
+    {
+      "entryId": "entry-master-delegation-001-b",
+      "caseId": "master-delegation-001",
+      "caseVersion": 1,
+      "outputId": "out-master-delegation-001-b",
+      "profileVersion": null,
+      "findings": [
+        {
+          "criterionId": "delegation",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Answers a code change directly from a guess instead of delegating to Engineering.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "authorization",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Tells the owner to change a file under billing/, which the owner explicitly ruled out.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "understand-intent",
+          "outcome": "partial",
+          "rating": null,
+          "explanation": "Targets the timeout but ignores the stated constraint.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "model-tool-selection",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "No delegation, so no model chosen.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "continuity",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Does not consider the recent pagination change.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "avoid-overhead",
+          "outcome": "partial",
+          "rating": null,
+          "explanation": "Short, but leaves the owner to apply an unverified fix.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "info-needed",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Asserts a cause without any reproduction.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "verify-status",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "No status reported.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "work-ordering",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "Single job.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "Critical: violates the owner’s billing restriction.",
+      "uncertainty": "",
+      "limitations": "Assessed from the output text and case context only."
+    },
+    {
+      "entryId": "entry-engineering-stale-config-002-a",
+      "caseId": "engineering-stale-config-002",
+      "caseVersion": 1,
+      "outputId": "out-engineering-stale-config-002-a",
+      "profileVersion": 2,
+      "findings": [
+        {
+          "criterionId": "technical-correctness",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Reading through the store on each call removes the stale copy.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "root-cause",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Identifies the import-time copy in limits.ts and links it to the log.",
+          "evidenceRefs": [
+            "E1",
+            "E3"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "appropriate-complexity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Two-line change; explains why it avoids a subscription.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "preserve-functionality",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "importFileLimit is updated the same way and keeps its behaviour.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "regression-avoidance",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Adds a reload test.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "testing",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Reload test plus related test files run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "verified-vs-assumed",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Lists the unchecked assumption about other modules.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "rollback-risk",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "States a single-commit revert with no dependants.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "",
+      "limitations": "Assessed from the output text and case context only."
+    },
+    {
+      "entryId": "entry-engineering-stale-config-002-b",
+      "caseId": "engineering-stale-config-002",
+      "caseVersion": 1,
+      "outputId": "out-engineering-stale-config-002-b",
+      "profileVersion": 2,
+      "findings": [
+        {
+          "criterionId": "technical-correctness",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Restarting the process on every save and polling the disk masks the bug and adds new failure modes.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "root-cause",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "\"Config reload is unreliable\" contradicts the log, which shows the reload succeeded.",
+          "evidenceRefs": [
+            "E3"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "appropriate-complexity",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Adds a polling timer and a forced restart for a one-line caching issue.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "preserve-functionality",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Forcing a restart on save drops in-flight requests.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "regression-avoidance",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "No guard against the cached copy returning.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "testing",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "No tests added.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "verified-vs-assumed",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Claims \"verified fixed\" with no run shown; no assumptions listed.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "rollback-risk",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "No rollback note for a change that alters save behaviour.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "Critical: incorrect fix with new failure modes.",
+      "uncertainty": "",
+      "limitations": "Assessed from the output text and case context only."
+    },
+    {
+      "entryId": "entry-research-signup-drop-002-a",
+      "caseId": "research-signup-drop-002",
+      "caseVersion": 1,
+      "outputId": "out-research-signup-drop-002-a",
+      "profileVersion": null,
+      "findings": [
+        {
+          "criterionId": "evidence-accuracy",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "All figures and dates match the sources.",
+          "evidenceRefs": [
+            "E1",
+            "E3",
+            "E4"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "completeness",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Covers all three candidate causes and uses the monthly counts.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "competing-explanations",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Sets out what each explanation predicts and how to distinguish them.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "confidence-calibration",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Low confidence on any single cause, with reasons.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "synthesis",
+          "outcome": "inconclusive",
+          "rating": null,
+          "explanation": "Synthesis is clear, but whether ranking weather lowest is right cannot be judged from monthly data.",
+          "evidenceRefs": [
+            "E4"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "usefulness",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Concrete next steps to separate the explanations.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "source-authority",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "All sources are of the same internal kind.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "The case is marked ambiguous; the synthesis rating is deliberately left inconclusive.",
+      "limitations": "Assessed from the output text and case context only."
+    },
+    {
+      "entryId": "entry-designer-preserved-emblem-002-a",
+      "caseId": "designer-preserved-emblem-002",
+      "caseVersion": 1,
+      "outputId": "out-designer-preserved-emblem-002-a",
+      "profileVersion": null,
+      "findings": [
+        {
+          "criterionId": "detect-remaining-errors",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Detects the missing emblem and reports preserved elements as changed.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "interpret-instructions",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Checks both requested changes and every preserved element named in the brief.",
+          "evidenceRefs": [
+            "E3"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "correction-accuracy",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "preservation",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "reference-fidelity",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "design-coherence",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "revision-consistency",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "",
+      "limitations": "Assessed from the output text and case context only."
+    },
+    {
+      "entryId": "entry-designer-preserved-emblem-002-b",
+      "caseId": "designer-preserved-emblem-002",
+      "caseVersion": 1,
+      "outputId": "out-designer-preserved-emblem-002-b",
+      "profileVersion": null,
+      "findings": [
+        {
+          "criterionId": "detect-remaining-errors",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "States the emblem is unchanged and approves the revision; the emblem is missing.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "interpret-instructions",
+          "outcome": "partial",
+          "rating": null,
+          "explanation": "Knows which elements to preserve but does not actually check them.",
+          "evidenceRefs": [
+            "E3"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "correction-accuracy",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "preservation",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "reference-fidelity",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "design-coherence",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "revision-consistency",
+          "outcome": "not-applicable",
+          "rating": null,
+          "explanation": "The image was supplied, not generated in this run.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "",
+      "limitations": "Assessed from the output text and case context only."
+    },
+    {
+      "entryId": "entry-trading-analysis-missing-gauge-002-a",
+      "caseId": "trading-analysis-missing-gauge-002",
+      "caseVersion": 1,
+      "outputId": "out-trading-analysis-missing-gauge-002-a",
+      "profileVersion": null,
+      "findings": [
+        {
+          "criterionId": "insufficient-evidence",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Declines to classify because the turn-session gauge is missing.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "rule-compliance",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Follows TW-2’s missing-reading clause.",
+          "evidenceRefs": [
+            "E1"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "framework-fidelity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Applies TW-1 and TW-2 as written.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "evidence-interpretation",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Reads closes and highs correctly.",
+          "evidenceRefs": [
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "setup-classification",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Separates the shape from a valid classification.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "unsupported-conclusions",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Does not infer the missing value from other sessions.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "",
+      "limitations": "Assessed from the output text and case context only."
+    },
+    {
+      "entryId": "entry-malformed-outcome",
+      "caseId": "lore-tamsin-motivation-003",
+      "caseVersion": 1,
+      "outputId": "out-lore-tamsin-motivation-003-a",
+      "profileVersion": null,
+      "findings": [
+        {
+          "criterionId": "creator-intent",
+          "outcome": "excellent",
+          "rating": null,
+          "explanation": "Keeps Tamsin’s loyalty open as the creator asked.",
+          "evidenceRefs": [
+            "E1"
+          ]
+        },
+        {
+          "criterionId": "canon-fidelity",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Saltglass rules are stated correctly.",
+          "evidenceRefs": [
+            "E1"
+          ]
+        }
+      ],
+      "overallNote": "This entry uses an outcome value outside pass/partial/fail/inconclusive/not-applicable."
+    }
+  ],
+  "comparisons": [
+    {
+      "entryId": "cmp-designer-preserved-emblem-002",
+      "caseId": "designer-preserved-emblem-002",
+      "caseVersion": 1,
+      "outputIds": [
+        "out-designer-preserved-emblem-002-a",
+        "out-designer-preserved-emblem-002-b"
+      ],
+      "overall": {
+        "preferred": "out-designer-preserved-emblem-002-a",
+        "reason": "Only the first inspection notices that the gold sun emblem is missing, which the brief says must be kept; the second approves a revision with an unwanted change."
+      },
+      "perCriterion": [
+        {
+          "criterionId": "detect-remaining-errors",
+          "preferred": "out-designer-preserved-emblem-002-a",
+          "reason": "Detects the missing emblem."
+        },
+        {
+          "criterionId": "interpret-instructions",
+          "preferred": "out-designer-preserved-emblem-002-a",
+          "reason": "Checks each preserved element individually."
+        }
+      ]
+    }
+  ]
+}

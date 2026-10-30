@@ -1,0 +1,910 @@
+{
+  "profiles": [
+    {
+      "schema": "eval-lab/specialist-profile",
+      "schemaVersion": 1,
+      "id": "research",
+      "version": 1,
+      "name": "Research",
+      "purpose": "Finds, weighs and synthesises sources; reports what the evidence supports, where it conflicts, and how confident to be.",
+      "capabilities": [
+        {
+          "id": "primary",
+          "name": "Research and synthesis",
+          "description": "Source handling, synthesis and calibration.",
+          "optional": false
+        }
+      ],
+      "criteria": [
+        {
+          "id": "completeness",
+          "name": "Completeness",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 3,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: uses every relevant supplied source and answers every part of the question."
+        },
+        {
+          "id": "source-authority",
+          "name": "Source authority",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: weighs sources by how they were produced (controlled test, field log, anecdote) and says so. Fail: treats all sources as equal."
+        },
+        {
+          "id": "evidence-accuracy",
+          "name": "Evidence accuracy",
+          "description": "",
+          "tier": "core",
+          "mandatory": true,
+          "capability": "primary",
+          "methods": [
+            "deterministic",
+            "manual"
+          ],
+          "weight": 5,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Mandatory. Fail if any figure, condition or claim is attributed to a source that does not say it, or a conflict between sources is reported as agreement."
+        },
+        {
+          "id": "competing-explanations",
+          "name": "Competing explanations",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: when sources disagree or a cause is uncertain, sets out the plausible explanations and what would distinguish them."
+        },
+        {
+          "id": "synthesis",
+          "name": "Synthesis quality",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual",
+            "blinded-comparison"
+          ],
+          "weight": 3,
+          "assesses": "agent",
+          "scale": {
+            "kind": "rating",
+            "min": 1,
+            "max": 5,
+            "anchors": "1 = list of sources with no synthesis; 3 = combines sources but loses conditions; 5 = a coherent account that keeps every important condition."
+          },
+          "guidance": "Rate how well the sources are combined into one account. Pass at 4 or above."
+        },
+        {
+          "id": "usefulness",
+          "name": "Practical usefulness",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 2,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: the owner can act on the answer (a number with its conditions, a next step)."
+        },
+        {
+          "id": "confidence-calibration",
+          "name": "Confidence calibration",
+          "description": "",
+          "tier": "core",
+          "mandatory": false,
+          "capability": "primary",
+          "methods": [
+            "manual"
+          ],
+          "weight": 4,
+          "assesses": "agent",
+          "scale": {
+            "kind": "outcome"
+          },
+          "guidance": "Pass: stated confidence matches the evidence (number and quality of sources, agreement). Fail: confident conclusions from thin or conflicting evidence."
+        }
+      ],
+      "changeNote": "",
+      "createdAt": "2026-09-01T09:00:00Z",
+      "origin": "synthetic"
+    }
+  ],
+  "cases": [
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "research-contradiction-001",
+      "version": 1,
+      "status": "evaluated",
+      "archived": false,
+      "split": "development",
+      "specialistId": "research",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Two sources disagree on a cell’s cycle life",
+      "task": "Owner: \"How many charge cycles does the Mirefen sodium cell last before it drops to 80% capacity? I need one number for the planning sheet.\"\n\nAnswer using the sources. Include a line \"Contradiction: yes\" or \"Contradiction: no\" saying whether the sources conflict. Cite the sources you rely on by their bracketed ids, for example [E1].",
+      "context": [
+        {
+          "id": "bench",
+          "title": "E1 · Bench test report, Ostrel Cell Lab (synthetic)",
+          "kind": "text",
+          "text": "Mirefen sodium cell, 12 cells tested. Controlled chamber at 25 °C, 1C charge and discharge. Median cycles to 80% capacity: 1,800 (range 1,690–1,910).",
+          "attachment": null,
+          "authoritative": true,
+          "note": ""
+        },
+        {
+          "id": "field",
+          "title": "E2 · Field trial log, Saltmarsh depot (synthetic)",
+          "kind": "text",
+          "text": "Mirefen sodium cells in 40 storage units over 14 months. Enclosure temperature averaged 40 °C in summer; peak charge rate 2C. Units reached 80% capacity after roughly 900 cycles on average. Cycle counts estimated from the controller log, which reset twice.",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Recognise that the sources conflict (1,800 vs roughly 900 cycles), explain that they were measured under different conditions (25 °C/1C controlled vs 40 °C/2C field, with an unreliable counter), and refuse to average them. Give a conditioned answer the owner can use and state confidence as moderate at best given two sources.",
+        "acceptanceCriteria": [
+          "The conflict between 1,800 and ~900 cycles is stated explicitly.",
+          "Temperature and charge-rate differences are named as a likely reason, without claiming they are proven to be the cause.",
+          "No averaged or blended figure is presented as the answer.",
+          "A usable recommendation is given with its conditions."
+        ],
+        "referenceAnswer": "Contradiction: yes. ~1,800 cycles under controlled 25 °C/1C [E1]; ~900 in hot field use at up to 2C with an unreliable counter [E2]. Plan with ~900 for hot, fast-charging deployments; confidence moderate.",
+        "answerKind": "mixed"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "Controlled bench test: median 1,800 cycles at 25 °C, 1C.",
+          "contextItemId": "bench"
+        },
+        {
+          "id": "E2",
+          "description": "Field log: about 900 cycles at 40 °C, 2C peak; counter reset twice.",
+          "contextItemId": "field"
+        }
+      ],
+      "methods": [
+        "deterministic",
+        "manual",
+        "blinded-comparison"
+      ],
+      "checks": [
+        {
+          "id": "cites-both-sources",
+          "criterionId": "evidence-accuracy",
+          "type": "evidence-reference",
+          "refs": [
+            "E1",
+            "E2"
+          ],
+          "min": 2,
+          "description": "Both sources are cited."
+        },
+        {
+          "id": "flags-contradiction",
+          "criterionId": "evidence-accuracy",
+          "type": "expected-label",
+          "label": "Contradiction",
+          "accepted": [
+            "yes"
+          ],
+          "description": "The output says the sources conflict."
+        }
+      ],
+      "limitations": "Only two synthetic sources; the \"right\" planning number depends on deployment conditions the owner has not stated.",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "contradiction",
+        "sources"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-09-09T10:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "research-signup-drop-002",
+      "version": 1,
+      "status": "frozen",
+      "archived": false,
+      "split": "development",
+      "specialistId": "research",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Three plausible causes for a fall in volunteer sign-ups",
+      "task": "Owner: \"Volunteer sign-ups for the Brindlewick seed library fell 38% this spring compared with last spring. Why?\"\n\nAnswer from the material provided. Cite the sources you rely on by their bracketed ids, for example [E1].",
+      "context": [
+        {
+          "id": "newsletter",
+          "title": "E1 · Coordinator note: newsletter change",
+          "kind": "text",
+          "text": "From 1 February the newsletter moved from a printed sheet at the library desk to email only. Email list: 210 addresses; the printed run was about 400 copies.",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        },
+        {
+          "id": "weather",
+          "title": "E2 · Synthetic weather summary",
+          "kind": "text",
+          "text": "March was the wettest March in the synthetic twelve-year record; April and May were close to average.",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        },
+        {
+          "id": "form",
+          "title": "E3 · Sign-up form change log",
+          "kind": "text",
+          "text": "From 10 March the sign-up form required creating an account before submitting. Previously it was a single page with name and email.",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        },
+        {
+          "id": "counts",
+          "title": "E4 · Sign-up counts",
+          "kind": "text",
+          "text": "Spring last year (Mar–May): 145 sign-ups. Spring this year: 90. Weekly counts are not available; monthly: Mar 21, Apr 33, May 36 (last year: 52, 48, 45).",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Set out the three candidate explanations with what each predicts, note that monthly data cannot separate them (all three changes landed in Feb–Mar, and April–May stayed low after the weather normalised), and suggest how to tell them apart (weekly counts around 10 March, form drop-off rate, survey of past volunteers). Do not present one cause as established.",
+        "acceptanceCriteria": [
+          "All three candidate causes are mentioned.",
+          "Uses the monthly counts to reason about which explanations fit (e.g. weather alone does not explain April–May).",
+          "Does not claim any single cause is established.",
+          "Proposes at least one concrete way to distinguish the explanations."
+        ],
+        "referenceAnswer": "Expected assessment: competing-explanations and confidence-calibration can be judged; whether an output’s ranking of the newsletter vs the form change is right is expected to be inconclusive, because the data cannot separate them.",
+        "answerKind": "mixed"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "Newsletter moved to email-only from 1 February, reaching fewer people.",
+          "contextItemId": "newsletter"
+        },
+        {
+          "id": "E2",
+          "description": "Wet March, normal April–May.",
+          "contextItemId": "weather"
+        },
+        {
+          "id": "E3",
+          "description": "Account requirement added to the sign-up form from 10 March.",
+          "contextItemId": "form"
+        },
+        {
+          "id": "E4",
+          "description": "Monthly counts lower in all three months; no weekly data.",
+          "contextItemId": "counts"
+        }
+      ],
+      "methods": [
+        "manual",
+        "deterministic",
+        "blinded-comparison"
+      ],
+      "checks": [
+        {
+          "id": "cites-sources",
+          "criterionId": "completeness",
+          "type": "evidence-reference",
+          "refs": [
+            "E1",
+            "E2",
+            "E3",
+            "E4"
+          ],
+          "min": 3,
+          "description": "At least three of the four items are cited."
+        }
+      ],
+      "limitations": "The data genuinely cannot decide between the newsletter and form explanations. Reviewers should not reward a confident ranking or penalise a tentative one.",
+      "ambiguity": "ambiguous",
+      "ambiguityNote": "Two plausible causes (newsletter reach and form friction) overlap in time and the counts are monthly, so no output can establish which mattered more. Findings on ranking are expected to be inconclusive.",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "competing-explanations",
+        "ambiguous"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-09-16T10:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-case",
+      "schemaVersion": 1,
+      "id": "research-benchmark-replication-003",
+      "version": 1,
+      "status": "candidate",
+      "archived": false,
+      "split": "development",
+      "specialistId": "research",
+      "profileVersion": 1,
+      "capability": "primary",
+      "title": "Does a reported parser speed-up replicate?",
+      "task": "A project note claims the Quillon parser (synthetic) became 40% faster in version 3. Using the two benchmark logs, say whether the claim is supported. Cite the sources you rely on by their bracketed ids, for example [E1].",
+      "context": [
+        {
+          "id": "claim",
+          "title": "E1 · Project note",
+          "kind": "text",
+          "text": "Version 3 parses 40% faster than version 2 on the standard corpus.",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        },
+        {
+          "id": "bench-log",
+          "title": "E2 · Benchmark log (synthetic)",
+          "kind": "text",
+          "text": "v2: 12.4 s, 12.6 s, 12.5 s on corpus-A. v3: 7.6 s, 7.4 s on corpus-B (smaller corpus, 70% of corpus-A size).",
+          "attachment": null,
+          "authoritative": false,
+          "note": ""
+        }
+      ],
+      "contextNote": "",
+      "expected": {
+        "behaviour": "Point out that the runs used different corpora, so the 40% figure is not supported as stated; normalising by corpus size suggests little or no speed-up. Recommend re-running on the same corpus.",
+        "acceptanceCriteria": [
+          "Notes that v2 and v3 were run on different corpora.",
+          "Does not confirm the 40% claim.",
+          "Recommends a like-for-like re-run."
+        ],
+        "referenceAnswer": "",
+        "answerKind": "mixed"
+      },
+      "evidence": [
+        {
+          "id": "E1",
+          "description": "The claim of a 40% speed-up.",
+          "contextItemId": "claim"
+        },
+        {
+          "id": "E2",
+          "description": "Runs on different corpora.",
+          "contextItemId": "bench-log"
+        }
+      ],
+      "methods": [
+        "manual"
+      ],
+      "checks": [],
+      "limitations": "None known",
+      "ambiguity": "clear",
+      "ambiguityNote": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "tags": [
+        "replication",
+        "draft"
+      ],
+      "validation": null,
+      "freeze": null,
+      "externalRef": null,
+      "previousVersion": null,
+      "changeNote": "",
+      "createdAt": "2026-10-22T11:00:00Z"
+    }
+  ],
+  "outputs": [
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-research-contradiction-001-a",
+      "caseId": "research-contradiction-001",
+      "caseVersion": 1,
+      "label": "Opus · instructions v2",
+      "text": "Contradiction: yes\n\nThe two sources don't give one number, and they shouldn't be averaged:\n\n- Controlled bench test: median 1,800 cycles to 80% (range 1,690–1,910), at 25 °C and 1C [E1].\n- Field trial: roughly 900 cycles, with enclosures averaging 40 °C in summer and charging peaking at 2C [E2].\n\nThe most likely reason for the gap is the conditions: heat and faster charging both plausibly shorten cell life, and the field units had both. That's an inference, not something either source tests directly. The field figure is also less precise — its cycle counter reset twice, so 900 is an estimate [E2].\n\nFor the planning sheet: if your units will sit in warm enclosures or fast-charge, use about 900 cycles. If they'll be in a controlled room at moderate rates, 1,800 is supported by the bench test. If you don't know yet, plan on 900 and treat anything better as upside.\n\nConfidence: moderate. Two sources, measured differently, and no test that isolates temperature from charge rate.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-opus",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "research-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "research-context-sources",
+        "toolConfigIds": [
+          "source-reader-v1"
+        ]
+      },
+      "workspace": {
+        "job": "tSYN0024",
+        "piece": 1,
+        "phase": "worker",
+        "reply": null,
+        "chat": null
+      },
+      "resources": {
+        "tokens": {
+          "uncached": 2600,
+          "cacheWrite": 4100,
+          "cacheWrite1h": null,
+          "cacheRead": 0,
+          "output": 540,
+          "thinking": 1220
+        },
+        "durationS": 18.3,
+        "steps": null,
+        "provenance": {
+          "source": "synthetic",
+          "note": ""
+        }
+      },
+      "producedAt": "2026-09-10T13:10:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-10T13:30:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-research-contradiction-001-b",
+      "caseId": "research-contradiction-001",
+      "caseVersion": 1,
+      "label": "Fable · instructions v2",
+      "text": "Contradiction: no\n\nBoth sources broadly agree that the Mirefen cell is a long-life chemistry. The bench test reports 1,800 cycles [E1] and the field trial around 900 [E2]; taking the midpoint gives a planning figure of 1,350 cycles to 80% capacity.\n\nUse 1,350 cycles for the planning sheet. This is a well-supported figure, since it combines a lab test with real-world data across 40 units, and should hold across deployments.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-fable",
+        "provider": "claude",
+        "effort": "low",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "research-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "research-context-sources",
+        "toolConfigIds": [
+          "source-reader-v1"
+        ]
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "producedAt": "2026-09-10T13:12:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-10T13:30:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-research-signup-drop-002-a",
+      "caseId": "research-signup-drop-002",
+      "caseVersion": 1,
+      "label": "Sonnet · instructions v2",
+      "text": "Short answer: the material points to three possible causes, and it can't tell us which one mattered most.\n\n1. Newsletter reach. Moving to email-only from 1 February cut the audience from roughly 400 printed copies to 210 addresses [E1]. That would lower sign-ups across all of spring.\n2. The sign-up form. Requiring an account from 10 March adds a step where people drop out [E3]. That would also lower sign-ups from mid-March onward.\n3. Weather. March was exceptionally wet [E2], which could explain a weak March — but April and May stayed well below last year (33 vs 48, 36 vs 45) after the weather returned to normal [E4], so weather alone doesn't explain the drop.\n\nExplanations 1 and 2 both fit the monthly counts, and they started within six weeks of each other, so the data can't separate them.\n\nTo find out:\n- Pull weekly sign-ups around 10 March: a step down that week points to the form.\n- Check how many people start the form but don't finish.\n- Ask a handful of last year's volunteers how they heard about it this year.\n\nConfidence: low on any single cause; moderate that weather is at most a minor part.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "claude-sonnet",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "research-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "research-context-sources",
+        "toolConfigIds": [
+          "source-reader-v1"
+        ]
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": "rSYN0088",
+        "chat": "cSYN0013"
+      },
+      "producedAt": "2026-09-17T10:20:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-17T10:40:00Z"
+    },
+    {
+      "schema": "eval-lab/saved-output",
+      "schemaVersion": 1,
+      "id": "out-research-signup-drop-002-b",
+      "caseId": "research-signup-drop-002",
+      "caseVersion": 1,
+      "label": "Astra · instructions v2",
+      "text": "The most likely cause is the newsletter change. Moving to email-only roughly halved the audience (about 400 printed copies down to 210 email addresses) [E1], and a smaller audience means fewer sign-ups throughout the season, which matches the fall in every month [E4].\n\nThe account requirement on the form [E3] probably contributed too, though it came later, on 10 March. The wet March [E2] may explain some of the March dip but can't account for April and May.\n\nRecommendation: bring back a printed newsletter at the library desk. If sign-ups recover, that confirms the newsletter was the main driver; if not, look at the form next.",
+      "toolArtifacts": [],
+      "producedBy": {
+        "model": "gpt-6-astra",
+        "provider": "codex",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "research-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "research-context-sources",
+        "toolConfigIds": [
+          "source-reader-v1"
+        ]
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "producedAt": "2026-09-17T10:22:00Z",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "privacy": "synthetic",
+      "createdAt": "2026-09-17T10:40:00Z"
+    }
+  ],
+  "results": [
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-research-contradiction-001-a",
+      "runId": "run-human-research-2026-10-09",
+      "caseId": "research-contradiction-001",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "research",
+      "profileVersion": 1,
+      "outputId": "out-research-contradiction-001-a",
+      "model": {
+        "model": "claude-opus",
+        "provider": "claude",
+        "effort": "medium",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "research-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "research-context-sources",
+        "toolConfigIds": [
+          "source-reader-v1"
+        ]
+      },
+      "workspace": {
+        "job": "tSYN0024",
+        "piece": 1,
+        "phase": "worker",
+        "reply": null,
+        "chat": null
+      },
+      "resources": {
+        "tokens": {
+          "uncached": 2600,
+          "cacheWrite": 4100,
+          "cacheWrite1h": null,
+          "cacheRead": 0,
+          "output": 540,
+          "thinking": 1220
+        },
+        "durationS": 18.3,
+        "steps": null,
+        "provenance": {
+          "source": "synthetic",
+          "note": ""
+        }
+      },
+      "methods": [
+        "manual"
+      ],
+      "evaluator": {
+        "type": "human",
+        "name": "Synthetic reviewer",
+        "version": null,
+        "date": "2026-10-09T11:00:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "evidence-accuracy",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Both figures, their conditions and the counter caveat are attributed correctly, and the conflict is reported as a conflict.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "completeness",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Uses both sources and answers the planning question.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "source-authority",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Distinguishes the controlled bench test from the less precise field log.",
+          "evidenceRefs": [
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "competing-explanations",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Names temperature and charge rate as likely, untested reasons and says neither source isolates them.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "synthesis",
+          "outcome": "pass",
+          "rating": {
+            "value": 5,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Keeps both figures with their conditions and turns them into a conditioned recommendation.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "usefulness",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "Gives a number for each deployment type and a default if conditions are unknown.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "confidence-calibration",
+          "outcome": "pass",
+          "rating": null,
+          "explanation": "States moderate confidence and why.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "createdAt": "2026-10-09T11:00:00Z"
+    },
+    {
+      "schema": "eval-lab/evaluation-result",
+      "schemaVersion": 1,
+      "id": "res-research-contradiction-001-b",
+      "runId": "run-human-research-2026-10-09",
+      "caseId": "research-contradiction-001",
+      "caseVersion": 1,
+      "split": "development",
+      "profileId": "research",
+      "profileVersion": 1,
+      "outputId": "out-research-contradiction-001-b",
+      "model": {
+        "model": "claude-fable",
+        "provider": "claude",
+        "effort": "low",
+        "modelVersion": null
+      },
+      "configuration": {
+        "configurationId": "research-instructions-v2",
+        "fingerprint": null,
+        "contextConfigId": "research-context-sources",
+        "toolConfigIds": [
+          "source-reader-v1"
+        ]
+      },
+      "workspace": {
+        "job": null,
+        "piece": null,
+        "phase": null,
+        "reply": null,
+        "chat": null
+      },
+      "methods": [
+        "manual"
+      ],
+      "evaluator": {
+        "type": "human",
+        "name": "Synthetic reviewer",
+        "version": null,
+        "date": "2026-10-09T11:00:00Z"
+      },
+      "findings": [
+        {
+          "criterionId": "evidence-accuracy",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Reports two conflicting figures as broad agreement and presents an averaged 1,350 that neither source supports. Conditions are dropped.",
+          "evidenceRefs": [
+            "E1",
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "completeness",
+          "outcome": "partial",
+          "rating": null,
+          "explanation": "Cites both sources but omits their conditions and the counter caveat.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "source-authority",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Treats an estimated field count and a controlled test as equal inputs to an average.",
+          "evidenceRefs": [
+            "E2"
+          ],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "competing-explanations",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Does not consider why the figures differ.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "synthesis",
+          "outcome": "fail",
+          "rating": {
+            "value": 1,
+            "min": 1,
+            "max": 5
+          },
+          "explanation": "Averaging is not synthesis; it loses the conditions that explain the gap.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "usefulness",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "The recommended figure would mislead planning for hot deployments.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        },
+        {
+          "criterionId": "confidence-calibration",
+          "outcome": "fail",
+          "rating": null,
+          "explanation": "Calls the figure \"well-supported\" and says it holds across deployments.",
+          "evidenceRefs": [],
+          "method": "manual",
+          "checkId": null,
+          "correctedByOwner": false
+        }
+      ],
+      "overallNote": "Mandatory evidence-accuracy failure: a conflict reported as agreement.",
+      "uncertainty": "",
+      "exclusions": "",
+      "limitations": "",
+      "provenance": {
+        "origin": "synthetic",
+        "source": "synthetic-suite"
+      },
+      "createdAt": "2026-10-09T11:00:00Z"
+    }
+  ]
+}

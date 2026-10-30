@@ -1,0 +1,22 @@
+{
+  "schema": "eval-lab/executable-report",
+  "schemaVersion": 1,
+  "runner": { "name": "synthetic-local-test-runner", "version": "0.1" },
+  "ranAt": "2026-10-21T14:00:00Z",
+  "caseId": "engineering-date-range-001",
+  "caseVersion": 1,
+  "outputId": "out-engineering-date-range-001-a",
+  "tests": [
+    { "name": "dateRange: includes the last day", "status": "passed", "durationMs": 4 },
+    { "name": "dateRange: single-day range", "status": "passed", "durationMs": 2 },
+    { "name": "dateRange: month boundary", "status": "passed", "durationMs": 3 },
+    { "name": "regression: report totals unchanged", "status": "passed", "durationMs": 11 },
+    { "name": "regression: legacy export timezone", "status": "failed", "durationMs": 9, "message": "Known issue tracked separately; unrelated to this change." }
+  ],
+  "criterionMapping": [
+    { "criterionId": "technical-correctness", "testNamePrefix": "dateRange:" },
+    { "criterionId": "regression-avoidance", "testNamePrefix": "regression:" }
+  ],
+  "baseline": { "runId": "synthetic-run-2026-10-14", "label": "Last week's run" },
+  "knownFailures": ["regression: legacy export timezone"]
+}

@@ -1,0 +1,67 @@
+/*
+ * Every colour the lab uses lives in this file.
+ * Dark is the default, whatever the operating system prefers; light is chosen in Settings / Data.
+ * All text/background pairs meet WCAG AA (4.5:1) in both themes (checked by tests/theme.test.ts).
+ */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #1b1916;
+  --surface: #24211d;
+  --surface-2: #2d2924;
+  --border: #4a443d;
+  --text: #efe8df;
+  --text-muted: #b9afa3;
+  --link: #e8a86e;
+  --accent: #d9904f;
+  --accent-hover: #e6a466;
+  --on-accent: #1b1916;
+  --focus: #f2bd84;
+  --good-bg: #22321e;
+  --good-fg: #a6dba0;
+  --bad-bg: #3d211d;
+  --bad-fg: #f4a597;
+  --warn-bg: #382f1a;
+  --warn-fg: #e8c66f;
+  --info-bg: #1f2a34;
+  --info-fg: #a3c6e8;
+  --neutral-bg: #34302b;
+  --neutral-fg: #d6cdc1;
+  --accent-bg: #3d2a1a;
+  --accent-fg: #f0b47a;
+  --danger: #b44533;
+  --on-danger: #fff7f2;
+  --code-bg: #2d2924;
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f6f1ea;
+  --surface: #fffcf7;
+  --surface-2: #efe8de;
+  --border: #cfc3b4;
+  --text: #2a241e;
+  --text-muted: #5f554a;
+  --link: #8a4718;
+  --accent: #9c531f;
+  --accent-hover: #86461a;
+  --on-accent: #fffcf7;
+  --focus: #b8622a;
+  --good-bg: #e3f1df;
+  --good-fg: #2f5f2a;
+  --bad-bg: #f7e1dc;
+  --bad-fg: #8a2f22;
+  --warn-bg: #f5ebcf;
+  --warn-fg: #6b5210;
+  --info-bg: #dde9f4;
+  --info-fg: #1f4d75;
+  --neutral-bg: #ebe4da;
+  --neutral-fg: #4a4239;
+  --accent-bg: #f3e1cf;
+  --accent-fg: #7a3f14;
+  --danger: #a8392a;
+  --on-danger: #fffcf7;
+  --code-bg: #efe8de;
+  --shadow: rgba(60, 40, 20, 0.12);
+}
