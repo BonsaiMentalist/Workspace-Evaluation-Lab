@@ -128,6 +128,7 @@ export function acceptImportedPreference(c: BlindedComparison, by: string, at = 
 /** The owner rejects an imported preference. Identities stay hidden; the owner may still record their own. */
 export function rejectImportedPreference(c: BlindedComparison, by: string, note: string, at = nowIso()): BlindedComparison {
   if (!c.importedPreference) throw new LifecycleError('This comparison has no imported preference to reject');
+  if (c.status === 'recorded') throw new LifecycleError('A preference has already been recorded for this comparison, so the imported one can no longer be rejected');
   return { ...c, review: { ...c.review, state: 'rejected', decidedAt: at, decidedBy: by, via: 'individual', note } };
 }
 

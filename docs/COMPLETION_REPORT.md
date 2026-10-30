@@ -22,7 +22,7 @@ Stage 1 is a working local application: create a case → validate and freeze it
 
 ## What was tested
 
-`npm test` runs 201 automated tests in 11 files, with no network, keys or AI models. All pass. `npm run typecheck` is clean.
+`npm test` runs 218 automated tests in 12 files, with no network, keys or AI models. All pass. `npm run typecheck` is clean.
 
 | Brief §14 requirement | Where |
 |---|---|
@@ -40,10 +40,12 @@ Stage 1 is a working local application: create a case → validate and freeze it
 | Inconclusive behaviour | `scoring.test.ts`, `workflow.test.ts`, `comparisons.test.ts` |
 | Full synthetic workflow (steps 1–8 of §14) | `workflow.test.ts`, through the real HTTP routes |
 | Accessibility basics | `theme.test.ts` (AA contrast in both themes, dark default, an intro sentence on every page) |
+| Independent review findings | `regressions.test.ts` (one regression test per confirmed finding) |
 
 Also checked by hand:
 
-- a crawl of all 311 internal pages (no errors);
+- a crawl of all 319 internal pages (no errors);
+- a fresh clone, where `npm install` and `npm start` worked with no other steps;
 - screenshots of every page in both themes;
 - a phone-width check (no horizontal scrolling);
 - `scripts/check-fixtures.ts`, which validates the suite and cross-references and prints each check's outcome.
@@ -72,7 +74,8 @@ Also checked by hand:
 - Blinding can be defeated by an output that names its own model; the blind page warns about this.
 - Deterministic checks are textual (wording, labels, JSON fields, citations, length). Every finding says they cannot judge meaning.
 - Storage is JSON files: fine for thousands of records, not for millions. There is no multi-user locking; this is a single-user app.
-- Records cannot be deleted from the UI. Cases can be archived; synthetic examples can be removed in bulk; anything else is removed by editing the data folder.
+- Records cannot be deleted from the UI. Cases can be archived, and synthetic examples can be removed in bulk (keeping any your own records depend on). Anything else is removed by editing the data folder.
+- While a blind comparison is open, pages that would reveal an output's model show a warning first. You can still choose to continue, so blindness depends on your choice there.
 - Saved outputs cannot be edited after saving, by design. Re-add an output to correct it.
 - Only format version 1 exists, so there is no migration code yet. A newer version is refused with a clear message.
 - Development and tests ran on Linux. The app uses no native modules and only `node:path`-based paths, so `npm install` and `npm start` should work unchanged on Windows, **but it has not been run on Windows**. A first launch there is the remaining manual check.
@@ -80,4 +83,22 @@ Also checked by hand:
 
 ## Independent review
 
-_To be completed after the review._
+A separate review pass read the code against the brief and probed the running app. It found no problem with escaping, form tokens and origin checks, file access, logs, frozen-version protection, scoring, spot-check gating, or the Analytics join keys. It confirmed 15 issues, all now fixed, each with a regression test:
+
+| # | Severity | Issue | Fix |
+|---|---|---|---|
+| 1 | Medium | The spot-check queue and an output's own pages could reveal which model wrote an output still in an open blind comparison. | Those pages warn first, and the queue hides those outputs' labels. |
+| 2 | Medium | An imported preference could be "rejected" after it was recorded, and still showed as recorded. | Rejecting after recording is refused. |
+| 3 | Medium | Importing a lab export trusted stored outcomes, lifecycle states and spot-check states. | The outcome is recomputed, and inconsistent records are refused. |
+| 4 | Medium | The label check could take minutes on a crafted long output. | Replaced by a linear line-by-line scan. |
+| 5 | Medium | An edited synthetic case stayed "synthetic", and removing the examples could orphan the owner's results. | Edits become the owner's own; removal keeps anything the owner's records depend on. |
+| 6 | Low–medium | A failed export import could be partly applied, and duplicate ids inside the file weren't caught. | Single all-or-nothing write; duplicates and dangling references are refused. |
+| 7 | Low–medium | A case with no pinned rubric version followed later profile edits. | Pinned at validation and on import. |
+| 8 | Low | A very long labelled value broke automatic checks. | Quoted values are shortened. |
+| 9 | Low | Backslash redirect after a theme change. | Refused. |
+| 10 | Low | A malformed form token caused an error 500. | Byte-length comparison; it now returns 403. |
+| 11 | Low | Rating-scale anchors were not shown and were lost on profile edits. | Editable and shown on profile and scoring pages. |
+| 12 | Low | A correction that only changed evidence references counted as an acceptance; the original was hidden for criteria set back to "not assessed". | Both fixed. |
+| 13 | Low | JSON saved with a byte-order mark (some Windows editors) was refused. | Accepted. |
+| 14 | Low | A large lab export could exceed the import limit. | Export imports accept up to 500 MB. |
+| 15 | Low | The "output has no counted assessment" warning could be missed. | Counts outputs, not results. |

@@ -66,3 +66,11 @@ export function rows(body: FormBody, key: string): FormBody[] {
   const items: unknown[] = Array.isArray(value) ? value : fromObject;
   return items.slice(0, MAX_ROWS).filter((item): item is FormBody => item !== null && typeof item === 'object' && !Array.isArray(item));
 }
+
+const BYTE_ORDER_MARK = '\uFEFF';
+
+/** Parses an uploaded JSON file, accepting the byte-order mark some Windows editors add. */
+export function parseJsonFile(buffer: Buffer): unknown {
+  const textContent = buffer.toString('utf8');
+  return JSON.parse(textContent.startsWith(BYTE_ORDER_MARK) ? textContent.slice(BYTE_ORDER_MARK.length) : textContent) as unknown;
+}

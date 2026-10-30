@@ -21,7 +21,7 @@ export function findingsFields(profile: SpecialistProfile, initial: readonly Fin
       ${c.description ? html`<p class="small muted">${c.description}</p>` : ''}
       ${c.guidance ? html`<details class="small"><summary>Rubric guidance</summary><div class="prose">${c.guidance}</div></details>` : ''}
       <div class="row radios">${OUTCOMES.map((o) => radio(o, OUTCOME_LABELS[o]))}${radio(NOT_ASSESSED, 'Not assessed')}</div>
-      ${c.scale.kind === 'rating' ? html`<label>Rating (${c.scale.min}–${c.scale.max}) <input name="findings[${i}][rating]" inputmode="decimal" value="${f?.rating?.value ?? ''}"></label>` : ''}
+      ${c.scale.kind === 'rating' ? html`<label>Rating (${c.scale.min}–${c.scale.max}${c.scale.anchors ? `; ${c.scale.anchors}` : ''}) <input name="findings[${i}][rating]" inputmode="decimal" value="${f?.rating?.value ?? ''}"></label>` : ''}
       <label>Explanation <textarea name="findings[${i}][explanation]" rows="2">${f?.explanation ?? ''}</textarea></label>
       <label>Evidence references (comma-separated, e.g. E1, E2) <input name="findings[${i}][evidence]" value="${(f?.evidenceRefs ?? []).join(', ')}"></label>
     </fieldset>`;

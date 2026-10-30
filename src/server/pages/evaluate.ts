@@ -38,11 +38,12 @@ import {
   tip,
   type SafeHtml,
 } from '../html.js';
-import { bodyOf, commaList, int, longText, num, text } from '../form.js';
+import { bodyOf, commaList, int, longText, num, text, parseJsonFile } from '../form.js';
 import { idParam, NotFoundError, redirectDone, render, versionParam, type AppContext } from '../context.js';
 import { caseLink, contextView, findingsTable, modelLine, outputBody, outputFacts, scoreSummaryView, splitBadge, TIPS } from '../views.js';
 import { findingsFields, findingsFromForm } from './scoringForm.js';
 import { HTTP } from '../status.js';
+import { passBlindGuard } from '../blindGuard.js';
 
 const KNOWN_MODELS = ['claude-opus', 'claude-sonnet', 'claude-haiku', 'claude-fable', 'sol-6.1', 'gpt-6-astra'];
 const MAX_IMPORT_OUTPUTS = 1000;
@@ -189,7 +190,8 @@ export function evaluateRoutes(ctx: AppContext, upload: Multer, jsonUpload: Mult
           : empty('No outputs yet. Add one below or import a file on the Evaluate page.'),
         outputs.length >= MIN_TO_COMPARE
           ? html`${postForm('/compare', ctx.csrf, html`<input type="hidden" name="caseId" value="${c.id}"><input type="hidden" name="caseVersion" value="${c.version}">${outputs.map((o) => html`<input type="hidden" name="outputIds" value="${o.id}">`)}${button('Compare all blind', 'primary')}`, { cls: 'inline' })}
-             ${linkButton(`/compare/report?case=${c.id}&version=${c.version}`, 'Criterion-level report')}`
+             ${linkButton(`/compare/report?case=${c.id}&version=${c.version}`, 'Criterion-level report')}
+             <p class="muted small">To keep a comparison blind, start it before opening the outputs.</p>`
           : html``,
       )}
       ${section('Add an output', outputForm(ctx.csrf, c, []))}`;
@@ -206,7 +208,7 @@ export function evaluateRoutes(ctx: AppContext, upload: Multer, jsonUpload: Mult
   router.post('/outputs/import', jsonUpload.single('file'), csrfCheck, async (req, res) => {
     const file = req.file;
     if (!file) throw new LifecycleError('Choose a JSON file to import');
-    const list = outputsInFile(JSON.parse(file.buffer.toString('utf8')));
+    const list = outputsInFile(parseJsonFile(file.buffer));
     const lab = ctx.store.snapshot();
     const at = nowIso();
     const outcomes = list.map((item, index): SavedOutput | string => {
@@ -239,6 +241,7 @@ export function evaluateRoutes(ctx: AppContext, upload: Multer, jsonUpload: Mult
 
   router.get('/outputs/:id', (req, res) => {
     const { output, testCase } = loadOutput(req);
+    if (!passBlindGuard(req, res, ctx, output.id, 'evaluate')) return;
     const results = resultsForOutput(ctx.store.snapshot(), output.id);
     const body = html`<div class="toolbar">${caseLink(testCase)} ${originBadge(output.provenance.origin)} ${linkButton(`/outputs/${output.id}/score`, 'Score by hand', 'primary')}</div>
       ${section('Output', outputBody(output))}
@@ -249,6 +252,7 @@ export function evaluateRoutes(ctx: AppContext, upload: Multer, jsonUpload: Mult
 
   router.get('/outputs/:id/score', (req, res) => {
     const { output, testCase } = loadOutput(req);
+    if (!passBlindGuard(req, res, ctx, output.id, 'evaluate')) return;
     if (!canEvaluate(testCase)) throw new LifecycleError('This case is not frozen, so its outputs cannot be scored');
     const profile = profileForCase(ctx.store.snapshot(), testCase);
     if (!profile) throw new NotFoundError('The profile for this case');
@@ -311,7 +315,7 @@ export function evaluateRoutes(ctx: AppContext, upload: Multer, jsonUpload: Mult
   router.post('/imports/assessments', jsonUpload.single('file'), csrfCheck, async (req, res) => {
     const file = req.file;
     if (!file) throw new LifecycleError('Choose a JSON file to import');
-    const outcome = importAssessmentBatch(JSON.parse(file.buffer.toString('utf8')), {
+    const outcome = importAssessmentBatch(parseJsonFile(file.buffer), {
       lab: ctx.store.snapshot(),
       sourceFile: file.originalname.slice(0, FILE_NAME_MAX),
       now: nowIso(),
@@ -340,7 +344,7 @@ export function evaluateRoutes(ctx: AppContext, upload: Multer, jsonUpload: Mult
   router.post('/imports/executable', jsonUpload.single('file'), csrfCheck, async (req, res) => {
     const file = req.file;
     if (!file) throw new LifecycleError('Choose a JSON file to import');
-    const report = parseExecutableReport(JSON.parse(file.buffer.toString('utf8')));
+    const report = parseExecutableReport(parseJsonFile(file.buffer));
     const lab = ctx.store.snapshot();
     const testCase = findCase(lab, report.caseId, report.caseVersion);
     const output = findOutput(lab, report.outputId);
@@ -358,6 +362,7 @@ export function evaluateRoutes(ctx: AppContext, upload: Multer, jsonUpload: Mult
     const lab = ctx.store.snapshot();
     const r = findResult(lab, idParam(req, 'id'));
     if (!r) throw new NotFoundError('That result');
+    if (!passBlindGuard(req, res, ctx, r.outputId, 'evaluate')) return;
     const profile = findProfile(lab, r.profileId, r.profileVersion);
     const testCase = findCase(lab, r.caseId, r.caseVersion);
     const output = findOutput(lab, r.outputId);

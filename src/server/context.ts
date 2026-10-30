@@ -59,6 +59,7 @@ export const NOTICES = {
   'observation-candidate': 'Candidate case created from the observation.',
   'observations-imported': 'Observations imported.',
   'synthetic-removed': 'Synthetic examples removed. Your own data was not touched.',
+  'synthetic-partly-removed': 'Synthetic examples removed, except the few your own records depend on (they stay so nothing of yours is left pointing at a missing case or output).',
   'synthetic-loaded': 'Synthetic examples loaded.',
   'runner-imported': 'Test-runner results imported.',
 } as const;

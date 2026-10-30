@@ -8,7 +8,7 @@ import { nowIso } from '../../domain/hash.js';
 import { COLLECTIONS, type Collection } from '../../storage/store.js';
 import { loadSyntheticSuite } from '../../seed/suite.js';
 import { button, html, linkButton, postForm, section, type SafeHtml } from '../html.js';
-import { bodyOf, checkbox } from '../form.js';
+import { bodyOf, checkbox, parseJsonFile } from '../form.js';
 import { NotFoundError, redirectDone, render, themeOf, type AppContext } from '../context.js';
 import { noteEvaluated } from './evaluate.js';
 
@@ -51,7 +51,7 @@ function originOf(record: unknown): string {
   return r.provenance?.origin ?? r.origin ?? 'user';
 }
 
-export function dataRoutes(ctx: AppContext, jsonUpload: Multer, csrfCheck: RequestHandler): ReturnType<typeof Router> {
+export function dataRoutes(ctx: AppContext, bundleUpload: Multer, csrfCheck: RequestHandler): ReturnType<typeof Router> {
   const router = Router();
 
   router.get('/data', (req, res) => {
@@ -124,14 +124,11 @@ export function dataRoutes(ctx: AppContext, jsonUpload: Multer, csrfCheck: Reque
     res.type('text/csv').send(resultsCsv(ctx.store.snapshot().results));
   });
 
-  router.post('/data/import', jsonUpload.single('file'), csrfCheck, async (req, res) => {
+  router.post('/data/import', bundleUpload.single('file'), csrfCheck, async (req, res) => {
     if (!req.file) throw new LifecycleError('Choose an export file to import');
-    const outcome = importBundle(JSON.parse(req.file.buffer.toString('utf8')), ctx.store.snapshot());
+    const outcome = importBundle(parseJsonFile(req.file.buffer), ctx.store.snapshot());
     if (!outcome.ok) throw new LifecycleError(outcome.message);
-    await COLLECTIONS.reduce(async (previous, c) => {
-      await previous;
-      await ctx.store.addMany(c, outcome.additions[c] as never[]); // additions were validated per collection by importBundle
-    }, Promise.resolve());
+    await ctx.store.addAll(outcome.additions);
     await noteEvaluated(ctx.store, outcome.additions.results);
     render(req, res, ctx, {
       title: 'Import a lab export',
@@ -143,8 +140,8 @@ export function dataRoutes(ctx: AppContext, jsonUpload: Multer, csrfCheck: Reque
 
   router.post('/data/synthetic/remove', csrfCheck, async (req, res) => {
     if (!checkbox(bodyOf(req), 'confirm')) throw new LifecycleError('Tick the box to confirm');
-    await ctx.store.removeSynthetic();
-    redirectDone(res, '/data', 'synthetic-removed');
+    const { kept } = await ctx.store.removeSynthetic();
+    redirectDone(res, '/data', kept ? 'synthetic-partly-removed' : 'synthetic-removed');
   });
 
   router.post('/data/synthetic/load', csrfCheck, async (_req, res) => {

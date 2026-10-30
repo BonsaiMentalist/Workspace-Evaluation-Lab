@@ -54,6 +54,15 @@ Each rule is enforced in one place and covered by tests.
 - **Evaluator kinds are never silently mixed.** Every result is labelled Person, AI reviewer, *AI reviewer corrected by owner*, Automatic check or Test runner. A comparison row only says which output a criterion favours when *one* kind of evaluator assessed every output on it. Otherwise it says the criterion cannot be compared.
 - **AI reviewer assessments count only after a spot-check.** They import as *needs spot-check* and appear in no report, comparison or history until accepted or corrected. A correction keeps both versions. The rest of a batch can be accepted together only after `max(2, 20%)` of it has been checked one by one (capped at the batch size).
 - **Blind means blind.** The blind view is built from an allow-list of fields (text, plus tool images without tool identity). Identities appear only once a preference with a reason is recorded, or an imported preference is accepted. Labels are assigned in a seeded random order. The page warns that an output naming its own model defeats the blinding.
+- **Blindness holds across the lab.** While an output is in an open comparison, four pages would show its text next to its model, label or findings: its output page, its scoring form, its results and its spot-check (`server/blindGuard.ts`). Each of these shows a warning first, and the owner chooses whether to continue. The spot-check queue hides those outputs' labels.
+- **Imports follow the same rules as the app** (`bundle.ts`):
+  - a stored outcome is recomputed from the findings;
+  - a case whose lifecycle record doesn't add up is refused (for example "frozen" with no freeze record);
+  - an AI-reviewer result claiming it needs no spot-check is refused, and so is an inconsistent correction record;
+  - ids repeated inside the file are refused;
+  - references resolve only to records actually accepted;
+  - the import is written in one step, all or nothing.
+- **Removing the synthetic examples never orphans the owner's work.** Synthetic records that the owner's own records point at are kept. An edited synthetic case becomes the owner's own.
 - **No false precision.** History shows counts, not percentages. It warns when a group has fewer than five cases, mixes rubric versions, mixes evaluator kinds, or mixes held-out with development cases. A one-case comparison always says one case cannot establish a general strength or weakness.
 - **Equivalence is stated.** A comparison is *equivalent* when one setup variable differs (or none). It is *partially equivalent* when more than one differs, or when the case version, rubric version or evaluator kind differ, or a value is unknown for some outputs. It is *not directly comparable* when the outputs answer different cases. The reasons are always listed.
 - **Held-out answers stay out of test inputs.** `testInputFor` returns only the task and context. Expected behaviour, reference answers, evidence notes, checks, limitations and the title are left out.
@@ -77,7 +86,7 @@ The lab is a single-user app on the owner's computer. The threats are other webs
 - **Writes.** A state-changing request must not be reported by the browser as cross-site (Origin / Sec-Fetch-Site) and must carry the per-process form token. On upload routes the token is checked after the multipart body is parsed.
 - **Headers.** Strict Content-Security-Policy (`script-src 'self'`, no inline script or style, `frame-ancestors 'none'`), `nosniff`, `no-referrer` and no framing.
 - **Escaping.** Every page is built with an escaping template tag (`server/html.ts`). Imported text is always rendered as text.
-- **Files.** Record ids follow a strict pattern (no `..` or slashes). Attachments are stored under their content hash, served only from two fixed folders after a path-containment check, and accepted only when their bytes are PNG, JPEG or WebP, up to 5 MB. SVG is refused. JSON uploads are capped at 10 MB, and every list and string in a format has a maximum size.
+- **Files.** Record ids follow a strict pattern (no `..` or slashes). Attachments are stored under their content hash, served only from two fixed folders after a path-containment check, and accepted only when their bytes are PNG, JPEG or WebP, up to 5 MB. SVG is refused. JSON uploads are capped at 10 MB, and lab exports at 500 MB. Every list and string in a format has a maximum size, and text checks scan in linear time, so a hostile output cannot stall the server.
 - **Spreadsheet safety.** CSV cells that a spreadsheet would treat as formulas are neutralised.
 - **Logs.** Request logging is off by default. When enabled it records method, path and status, never bodies or query strings.
 - **Source checks.** The application source contains no `eval`, `new Function`, `child_process`, `http(s)` client or `fetch`, and a test enforces this. The browser is opened by the `open` package at start-up only.

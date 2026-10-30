@@ -22,7 +22,7 @@ import { describeZodError } from '../../domain/errors.js';
 import { newId, nowIso } from '../../domain/hash.js';
 import { saveImage } from '../../storage/attachments.js';
 import { badge, button, definitionList, empty, errorList, html, linkButton, originBadge, postForm, privacyLabel, prose, section, shortDate, tip, type SafeHtml } from '../html.js';
-import { bodyOf, checkbox, commaList, int, lines, longText, many, rows, text, type FormBody } from '../form.js';
+import { bodyOf, checkbox, commaList, int, lines, longText, many, rows, text, type FormBody, parseJsonFile } from '../form.js';
 import { idParam, NotFoundError, queryText, redirectDone, render, versionParam, type AppContext } from '../context.js';
 import { caseLink, caseStatusBadge, contextView, splitBadge, TIPS } from '../views.js';
 import { HTTP } from '../status.js';
@@ -454,7 +454,7 @@ export function caseRoutes(ctx: AppContext, upload: Multer, jsonUpload: Multer, 
   router.post('/cases/import', jsonUpload.single('file'), csrfCheck, async (req, res) => {
     const file = req.file;
     if (!file) throw new LifecycleError('Choose a JSON file to import');
-    const list = casesInFile(JSON.parse(file.buffer.toString('utf8')));
+    const list = casesInFile(parseJsonFile(file.buffer));
     const lab = ctx.store.snapshot();
     const at = nowIso();
     const outcomes = list.map((raw, index): EvaluationCase | string => {
@@ -465,6 +465,7 @@ export function caseRoutes(ctx: AppContext, upload: Multer, jsonUpload: Multer, 
         ...result.data,
         version: 1,
         status: 'candidate',
+        profileVersion: result.data.profileVersion ?? latestProfile(lab, result.data.specialistId)?.version ?? null,
         validation: null,
         freeze: null,
         previousVersion: null,

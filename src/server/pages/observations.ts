@@ -9,7 +9,7 @@ import { LifecycleError } from '../../domain/cases.js';
 import { describeZodError } from '../../domain/errors.js';
 import { newId, nowIso } from '../../domain/hash.js';
 import { badge, button, definitionList, empty, html, known, linkButton, originBadge, postForm, prose, section, shortDate, type SafeHtml } from '../html.js';
-import { bodyOf, longText, text } from '../form.js';
+import { bodyOf, longText, text, parseJsonFile } from '../form.js';
 import { idParam, NotFoundError, redirectDone, render, type AppContext } from '../context.js';
 
 const TYPE_LABELS = { success: 'Success', failure: 'Failure', correction: 'Correction', review: 'Review', other: 'Other' } as const;
@@ -86,7 +86,7 @@ export function observationRoutes(ctx: AppContext, jsonUpload: Multer, csrfCheck
   router.post('/observations/import', jsonUpload.single('file'), csrfCheck, async (req, res) => {
     const file = req.file;
     if (!file) throw new LifecycleError('Choose a JSON file to import');
-    const list = z.array(z.unknown()).max(MAX_IMPORT).parse(JSON.parse(file.buffer.toString('utf8')));
+    const list = z.array(z.unknown()).max(MAX_IMPORT).parse(parseJsonFile(file.buffer));
     const lab = ctx.store.snapshot();
     const outcomes = list.map((raw, i): ProductionObservation | string => {
       const parsed = ObservationSchema.safeParse(raw, { reportInput: true });

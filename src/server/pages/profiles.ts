@@ -8,7 +8,7 @@ import { describeZodError, schemaVersionProblem } from '../../domain/errors.js';
 import { LifecycleError } from '../../domain/cases.js';
 import { nowIso } from '../../domain/hash.js';
 import { badge, button, empty, errorList, html, linkButton, originBadge, postForm, section, shortDate, tip, type SafeHtml } from '../html.js';
-import { bodyOf, checkbox, int, longText, many, num, rows, text, type FormBody } from '../form.js';
+import { bodyOf, checkbox, int, longText, many, num, rows, text, type FormBody, parseJsonFile } from '../form.js';
 import { idParam, NotFoundError, redirectDone, render, versionParam, type AppContext } from '../context.js';
 import { TIPS } from '../views.js';
 import { HTTP } from '../status.js';
@@ -44,7 +44,7 @@ function criteriaTable(p: SpecialistProfile): SafeHtml {
         (c) => html`<tr><td><strong>${c.name}</strong> <span class="muted small">${c.id}</span><div class="small">${c.description}</div>${c.guidance ? html`<details class="small"><summary>Rubric guidance</summary><div class="prose">${c.guidance}</div></details>` : ''}</td>
         <td>${c.tier === 'core' ? badge('accent', 'Core') : badge('neutral', 'Optional')} ${c.mandatory ? html`${badge('bad', 'Mandatory')} ${tip(TIPS.mandatory)}` : ''}<div class="small">Weight ${c.weight}</div></td>
         <td>${c.methods.map((m) => METHOD_NAMES[m]).join(', ')}<div class="small muted">Judges: ${ASSESSES_NAMES[c.assesses]}</div></td>
-        <td>${c.scale.kind === 'rating' ? `Rating ${c.scale.min}–${c.scale.max}` : 'Pass / partly / fail'}</td></tr>`,
+        <td>${c.scale.kind === 'rating' ? html`Rating ${c.scale.min}–${c.scale.max}${c.scale.anchors ? html`<div class="small muted">${c.scale.anchors}</div>` : ''}` : 'Pass / partly / fail'}</td></tr>`,
       )}</tbody></table></div>`;
   })}`;
 }
@@ -71,7 +71,8 @@ function profileForm(csrf: string, action: string, p: Partial<SpecialistProfile>
     )}</div>
     <div class="row"><label>Scale <select name="criteria[${i}][scale]">${option('outcome', 'Pass / partly / fail', c?.scale.kind !== 'rating')}${option('rating', 'Rating', c?.scale.kind === 'rating')}</select></label>
       <label>Rating from <input name="criteria[${i}][min]" inputmode="numeric" value="${c?.scale.kind === 'rating' ? c.scale.min : 1}"></label>
-      <label>to <input name="criteria[${i}][max]" inputmode="numeric" value="${c?.scale.kind === 'rating' ? c.scale.max : DEFAULT_RATING_MAX}"></label></div>
+      <label>to <input name="criteria[${i}][max]" inputmode="numeric" value="${c?.scale.kind === 'rating' ? c.scale.max : DEFAULT_RATING_MAX}"></label>
+      <label class="grow">What the rating points mean <input name="criteria[${i}][anchors]" value="${c?.scale.kind === 'rating' ? c.scale.anchors : ''}" placeholder="e.g. 1 = flat, 3 = competent, 5 = memorable"></label></div>
     <label>Rubric guidance <textarea name="criteria[${i}][guidance]" rows="2">${c?.guidance ?? ''}</textarea></label>
   </div>`;
   return postForm(
@@ -112,7 +113,7 @@ function criterionFromRow(row: FormBody): Criterion | null {
     methods: methods.length ? methods : ['manual'],
     weight: num(row, 'weight') ?? 1,
     assesses: (['agent', 'tool-output', 'combined'] as const).find((a) => a === text(row, 'assesses')) ?? 'agent',
-    scale: isRating ? { kind: 'rating', min: int(row, 'min') ?? 1, max: int(row, 'max') ?? DEFAULT_RATING_MAX, anchors: '' } : { kind: 'outcome' },
+    scale: isRating ? { kind: 'rating', min: int(row, 'min') ?? 1, max: int(row, 'max') ?? DEFAULT_RATING_MAX, anchors: text(row, 'anchors') } : { kind: 'outcome' },
     guidance: longText(row, 'guidance'),
   };
 }
@@ -183,7 +184,7 @@ export function profileRoutes(ctx: AppContext, jsonUpload: Multer, csrfCheck: Re
 
   router.post('/profiles/import', jsonUpload.single('file'), csrfCheck, async (req, res) => {
     if (!req.file) throw new LifecycleError('Choose a JSON file to import');
-    const raw: unknown = JSON.parse(req.file.buffer.toString('utf8'));
+    const raw: unknown = parseJsonFile(req.file.buffer);
     const versionProblem = schemaVersionProblem(raw, PROFILE_SCHEMA, FORMAT_VERSION);
     if (versionProblem) throw new LifecycleError(versionProblem);
     const parsed = ProfileSchema.safeParse(raw, { reportInput: true });

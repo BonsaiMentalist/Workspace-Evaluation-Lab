@@ -50,7 +50,7 @@ describe('export and re-import', () => {
     const target = await freshStore(false);
     const result = store.snapshot().results[0];
     const outcome = importBundle({ ...buildBundle(target.snapshot()), results: [result] }, target.snapshot());
-    expect(outcome.problems[0]).toContain('neither in the lab nor in the file');
+    expect(outcome.problems[0]).toContain('neither in the lab nor accepted from the file');
   });
 
   it('refuses a bundle from a newer format version', async () => {

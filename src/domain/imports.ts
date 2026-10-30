@@ -283,7 +283,11 @@ export function rejectResult(result: EvaluationResult, by: string, note: string,
 }
 
 const sameFinding = (a: Finding, b: Finding | undefined): boolean =>
-  Boolean(b) && a.outcome === b?.outcome && a.explanation === b.explanation && JSON.stringify(a.rating) === JSON.stringify(b.rating);
+  Boolean(b) &&
+  a.outcome === b?.outcome &&
+  a.explanation === b.explanation &&
+  JSON.stringify(a.rating) === JSON.stringify(b.rating) &&
+  JSON.stringify(a.evidenceRefs) === JSON.stringify(b.evidenceRefs);
 
 /**
  * The owner's corrected findings replace the effective findings; the

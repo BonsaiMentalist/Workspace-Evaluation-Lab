@@ -95,7 +95,8 @@ export function validateCase(c: EvaluationCase, profile: SpecialistProfile | und
   if (c.status !== 'candidate') throw new LifecycleError(`Only a candidate can be validated; this case is ${c.status}`);
   const problems = validationProblems(c, profile);
   if (problems.length) throw new LifecycleError('This case is not ready to validate', problems);
-  return { ...c, status: NEXT_STATUS.candidate, validation: { validatedAt: at, validatedBy: by, notes } };
+  // Pin the rubric version, so a validated case never silently follows later profile edits.
+  return { ...c, status: NEXT_STATUS.candidate, profileVersion: c.profileVersion ?? profile?.version ?? null, validation: { validatedAt: at, validatedBy: by, notes } };
 }
 
 export function freezeCase(c: EvaluationCase, by: string, at = nowIso()): EvaluationCase {
@@ -113,6 +114,18 @@ export function markEvaluated(c: EvaluationCase): EvaluationCase {
 }
 
 export const canEvaluate = (c: EvaluationCase): boolean => EVALUABLE.has(c.status) && !c.archived;
+
+/** Problems with a case's lifecycle record itself (for example a "frozen" case with no freeze record). */
+export function lifecycleProblems(c: EvaluationCase): string[] {
+  const validated = c.status !== 'candidate';
+  const frozen = EVALUABLE.has(c.status);
+  return [
+    ...(validated && !c.validation ? [`is marked ${c.status} but has no validation record`] : []),
+    ...(frozen && !c.freeze ? [`is marked ${c.status} but has no freeze record`] : []),
+    ...(!frozen && c.freeze ? ['has a freeze record but is not frozen'] : []),
+    ...(c.freeze && !freezeIntact(c) ? ['no longer matches its freeze hash'] : []),
+  ];
+}
 
 /** True when a frozen case's stored hash still matches its content (it has not been tampered with). */
 export function freezeIntact(c: EvaluationCase): boolean {
@@ -133,7 +146,8 @@ export interface EditOutcome {
  * changed — the edit becomes a new candidate version.
  */
 export function editCase(current: EvaluationCase, changes: CaseChanges, latestVersion: number, changeNote: string, at = nowIso()): EditOutcome {
-  const merged = EvaluationCaseSchema.parse({ ...current, ...changes, changeNote });
+  // An edited case is the owner's own work, even when it started as a synthetic example.
+  const merged = EvaluationCaseSchema.parse({ ...current, ...changes, changeNote, provenance: { ...current.provenance, origin: 'user', source: 'manual-entry' } });
   if (EDITABLE_IN_PLACE.has(current.status)) {
     return { case: { ...merged, status: 'candidate', validation: null }, newVersion: false };
   }

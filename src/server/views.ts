@@ -62,7 +62,8 @@ export function findingsTable(profile: SpecialistProfile, findings: readonly Fin
   const row = (c: Criterion): SafeHtml => {
     const f = byId.get(c.id);
     const before = originalById.get(c.id);
-    const corrected = Boolean(f?.correctedByOwner && before);
+    // Also shown when the owner removed a finding the reviewer had made (set it back to "not assessed").
+    const corrected = Boolean(before) && (!f || f.correctedByOwner);
     return html`<tr>
       <td><strong>${c.name}</strong>${c.mandatory ? html` ${badge('accent', 'Mandatory')}` : ''}${c.tier === 'optional' ? html` ${badge('neutral', 'Optional')}` : ''}
         ${capabilityName.get(c.capability)?.optional ? html`<div class="muted small">${capabilityName.get(c.capability)?.name}</div>` : ''}</td>

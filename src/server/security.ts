@@ -85,8 +85,11 @@ export function sameOriginWrites(req: Request, res: Response, next: NextFunction
 }
 
 export function tokensMatch(expected: string, given: unknown): boolean {
-  if (typeof given !== 'string' || given.length !== expected.length) return false;
-  return timingSafeEqual(Buffer.from(given), Buffer.from(expected));
+  if (typeof given !== 'string') return false;
+  const a = Buffer.from(given);
+  const b = Buffer.from(expected);
+  // Compared as bytes: a token of the right length in characters can still differ in bytes (for example "é").
+  return a.length === b.length && timingSafeEqual(a, b);
 }
 
 /** Checks the form's secret token. Runs after the body is parsed (including file uploads). */

@@ -164,6 +164,29 @@ export class LabStore {
     });
   }
 
+  /**
+   * Adds records to several collections as one step: everything is validated
+   * and checked for clashes first, and nothing is written if anything fails.
+   */
+  async addAll(additions: { readonly [TCollection in Collection]?: ReadonlyArray<RecordOf<TCollection>> }): Promise<void> {
+    return this.exclusive(async () => {
+      const next = Object.fromEntries(
+        COLLECTIONS.map((collection) => {
+          const incoming = (additions[collection] ?? []) as readonly unknown[];
+          const valid = incoming.map((r) => this.validate(collection, r));
+          const existing = new Set((this.data[collection] as Keyed[]).map((r) => keyOf(collection, r)));
+          const keys = valid.map((r) => keyOf(collection, r as Keyed));
+          const clash = keys.find((k, i) => existing.has(k) || keys.indexOf(k) !== i);
+          if (clash) throw new StoreError(`A record with id ${clash.replace('@', ' version ')} already exists; nothing was imported`);
+          return [collection, [...(this.data[collection] as unknown[]), ...valid]];
+        }),
+      ) as Data; // one validated list per collection
+      const changed = COLLECTIONS.filter((c) => (additions[c] ?? []).length);
+      this.data = next;
+      await Promise.all(changed.map((c) => this.persist(c)));
+    });
+  }
+
   async replace<TCollection extends Collection>(collection: TCollection, record: RecordOf<TCollection>): Promise<RecordOf<TCollection>> {
     return this.exclusive(async () => {
       if (!RULES[collection].replaceable) throw new StoreError(`Saved ${collection} cannot be changed; create a new version instead`);
@@ -179,13 +202,41 @@ export class LabStore {
     });
   }
 
-  /** Removes every synthetic example record, leaving the user's own records untouched. */
-  async removeSynthetic(): Promise<number> {
+  /**
+   * Removes the synthetic example records, leaving the user's own records
+   * untouched. Synthetic records that the user's own records depend on (a case,
+   * output or profile version they point at) are kept, so nothing is orphaned.
+   * Returns how many were removed and how many were kept for that reason.
+   */
+  async removeSynthetic(): Promise<{ removed: number; kept: number }> {
     return this.exclusive(async () => {
-      const removed = COLLECTIONS.reduce((sum, c) => sum + (this.data[c] as unknown[]).filter(isSynthetic).length, 0);
-      this.data = Object.fromEntries(COLLECTIONS.map((c) => [c, (this.data[c] as unknown[]).filter((r) => !isSynthetic(r))])) as Data; // filtered copies of each collection
+      const own = <TRecord>(list: readonly TRecord[]): TRecord[] => list.filter((r) => !isSynthetic(r));
+      const d = this.data;
+      const ownResults = own(d.results);
+      const ownComparisons = own(d.comparisons);
+      const neededOutputs = new Set([...ownResults.map((r) => r.outputId), ...ownComparisons.flatMap((c) => c.entries.map((e) => e.outputId))]);
+      const keptOutputs = d.outputs.filter((o) => !isSynthetic(o) || neededOutputs.has(o.id));
+      const neededCases = new Set([...keptOutputs, ...ownResults, ...ownComparisons].map((r) => `${r.caseId}@${r.caseVersion}`));
+      const keptCases = d.cases.filter((c) => !isSynthetic(c) || neededCases.has(`${c.id}@${c.version}`));
+      const neededProfiles = new Set([
+        ...keptCases.flatMap((c) => (c.profileVersion === null ? [] : [`${c.specialistId}@${c.profileVersion}`])),
+        ...[...ownResults, ...ownComparisons].map((r) => `${r.profileId}@${r.profileVersion}`),
+      ]);
+      const next: Data = {
+        profiles: d.profiles.filter((p) => !isSynthetic(p) || neededProfiles.has(`${p.id}@${p.version}`)),
+        cases: keptCases,
+        outputs: keptOutputs,
+        results: ownResults,
+        comparisons: ownComparisons,
+        observations: own(d.observations),
+        importBatches: d.importBatches.filter((b) => !isSynthetic(b) || ownResults.some((r) => r.importRef?.batchId === b.id)),
+      };
+      const before = COLLECTIONS.reduce((sum, c) => sum + (d[c] as unknown[]).length, 0);
+      const after = COLLECTIONS.reduce((sum, c) => sum + (next[c] as unknown[]).length, 0);
+      const ownCount = COLLECTIONS.reduce((sum, c) => sum + (d[c] as unknown[]).filter((r) => !isSynthetic(r)).length, 0);
+      this.data = next;
       await Promise.all(COLLECTIONS.map((c) => this.persist(c)));
-      return removed;
+      return { removed: before - after, kept: after - ownCount };
     });
   }
 

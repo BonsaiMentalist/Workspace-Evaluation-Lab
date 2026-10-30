@@ -34,6 +34,8 @@ export interface AppOptions {
 const FORM_BODY_LIMIT = '2mb';
 const FORM_PARAMETER_LIMIT = 5000;
 const JSON_FILE_LIMIT = 10_485_760;
+/** Lab exports grow with every saved output, so their import limit is much higher than for other files. */
+const BUNDLE_FILE_LIMIT = 524_288_000;
 const MAX_IMAGE_FILES = 10;
 const MAX_FORM_FIELDS = 3000;
 const MAX_FIELD_BYTES = 1_048_576;
@@ -41,6 +43,7 @@ const THEME_COOKIE_MAX_AGE_MS = 31_536_000_000;
 const LIGHT = 'light';
 const ROOT = '/';
 const PROTOCOL_RELATIVE = '//';
+const BACKSLASH = '\\';
 const FILE_TOO_LARGE = 'LIMIT_FILE_SIZE';
 
 /** Domain and validation errors carry plain-language messages that are safe to show; anything else is hidden. */
@@ -50,6 +53,7 @@ export function createApp(options: AppOptions): express.Express {
   const ctx: AppContext = { store: options.store, csrf: options.csrf ?? newCsrfToken(), owner: options.owner ?? 'Owner' };
   const csrfCheck = requireCsrf(ctx.csrf);
   const imageUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: ATTACHMENT_MAX_BYTES, files: MAX_IMAGE_FILES, fields: MAX_FORM_FIELDS, fieldSize: MAX_FIELD_BYTES } });
+  const bundleUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: BUNDLE_FILE_LIMIT, files: 1, fields: MAX_FORM_FIELDS, fieldSize: MAX_FIELD_BYTES } });
   const jsonUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: JSON_FILE_LIMIT, files: 1, fields: MAX_FORM_FIELDS, fieldSize: MAX_FIELD_BYTES } });
 
   const app = express();
@@ -70,8 +74,8 @@ export function createApp(options: AppOptions): express.Express {
   app.post('/theme', csrfCheck, (req, res) => {
     const body = bodyOf(req);
     const back = text(body, 'back');
-    // Only same-site paths: "/cases" is fine, "//evil.example" and "https://…" are not.
-    const safeBack = back.startsWith(ROOT) && !back.startsWith(PROTOCOL_RELATIVE) ? back : ROOT;
+    // Only same-site paths: "/cases" is fine; "//evil.example", "/\\evil.example" and "https://…" are not.
+    const safeBack = back.startsWith(ROOT) && !back.startsWith(PROTOCOL_RELATIVE) && !back.includes(BACKSLASH) ? back : ROOT;
     const theme = text(body, 'theme') === LIGHT ? LIGHT : 'dark';
     res.cookie('theme', theme, { httpOnly: true, sameSite: 'strict', maxAge: THEME_COOKIE_MAX_AGE_MS, path: ROOT });
     res.redirect(HTTP.seeOther, safeBack);
@@ -92,7 +96,7 @@ export function createApp(options: AppOptions): express.Express {
   app.use(compareRoutes(ctx, csrfCheck));
   app.use(historyRoutes(ctx));
   app.use(observationRoutes(ctx, jsonUpload, csrfCheck));
-  app.use(dataRoutes(ctx, jsonUpload, csrfCheck));
+  app.use(dataRoutes(ctx, bundleUpload, csrfCheck));
 
   app.use((req: Request, _res: Response, next: NextFunction) => next(new NotFoundError(`The page ${req.path}`)));
 

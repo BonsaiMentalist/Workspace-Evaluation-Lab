@@ -26,7 +26,7 @@ Open a terminal in this folder. On Windows: open the folder in File Explorer, cl
 
 Your browser opens at `http://localhost:4317` by itself. To stop the lab, press **Ctrl+C** in the terminal.
 
-The first time it starts, the lab loads a set of **made-up examples** for every specialist, so each page has something to show. They are labelled *Synthetic example*. You can remove them at any time on **Settings / Data**.
+The first time it starts, the lab loads a set of **made-up examples** for every specialist, so each page has something to show. They are labelled *Synthetic example*. You can remove them at any time on **Settings / Data**. Any example that your own work depends on is kept, and a synthetic case you edit becomes yours.
 
 ## Using it
 

@@ -24,10 +24,11 @@ import {
   SpecialistProfile,
 } from './schemas.js';
 import { describeZodError, schemaVersionProblem } from './errors.js';
-import { freezeIntact } from './cases.js';
+import { lifecycleProblems } from './cases.js';
+import { findingProblems } from './imports.js';
 import { hashOf, nowIso } from './hash.js';
 import type { LabSnapshot } from './lookup.js';
-import { ASSESSED_BY_LABELS, assessedBy } from './scoring.js';
+import { ASSESSED_BY_LABELS, assessedBy, scoreFindings } from './scoring.js';
 
 export const APP_NAME = 'Specialist Evaluation Lab';
 export const APP_VERSION = '0.1.0';
@@ -83,20 +84,61 @@ export interface BundleImport {
 
 const emptyAdditions = (): BundleImport['additions'] => ({ profiles: [], cases: [], outputs: [], results: [], comparisons: [], observations: [], importBatches: [] });
 
-interface Accumulator {
-  readonly additions: Record<Collection, unknown[]>;
-  readonly skippedIdentical: number;
-  readonly problems: string[];
+/** Records accepted so far (from the lab or earlier in the file), used to resolve references. */
+interface Known {
+  readonly profiles: ReadonlyMap<string, SpecialistProfileRecord>;
+  readonly cases: ReadonlySet<string>;
+  readonly outputs: ReadonlySet<string>;
 }
 
-function referenceProblems(collection: Collection, record: Record<string, unknown>, known: { readonly cases: ReadonlySet<string>; readonly outputs: ReadonlySet<string> }): string | null {
-  const caseRef = `${String(record['caseId'])}@${String(record['caseVersion'])}`;
-  const needsCase: ReadonlySet<Collection> = new Set<Collection>(['outputs', 'results', 'comparisons']);
-  if (needsCase.has(collection) && !known.cases.has(caseRef)) return `refers to case ${caseRef.replace('@', ' version ')}, which is neither in the lab nor in the file`;
+type SpecialistProfileRecord = LabSnapshot['profiles'][number];
+
+const caseKey = (r: Record<string, unknown>): string => `${String(r['caseId'])}@${String(r['caseVersion'])}`;
+const profileKey = (r: Record<string, unknown>): string => `${String(r['profileId'])}@${String(r['profileVersion'])}`;
+const NEEDS_CASE: ReadonlySet<Collection> = new Set<Collection>(['outputs', 'results', 'comparisons']);
+const NEEDS_PROFILE: ReadonlySet<Collection> = new Set<Collection>(['results', 'comparisons']);
+
+function referenceProblem(collection: Collection, record: Record<string, unknown>, known: Known): string | null {
+  if (NEEDS_CASE.has(collection) && !known.cases.has(caseKey(record))) return `refers to case ${caseKey(record).replace('@', ' version ')}, which is neither in the lab nor accepted from the file`;
+  if (NEEDS_PROFILE.has(collection) && !known.profiles.has(profileKey(record))) return `refers to profile ${profileKey(record).replace('@', ' version ')}, which is neither in the lab nor in the file`;
   const outputIds = collection === 'results' ? [String(record['outputId'])] : [];
   const entryOutputs = collection === 'comparisons' ? ((record['entries'] as Array<{ outputId: string }> | undefined) ?? []).map((e) => e.outputId) : []; // entries already validated by the schema
   const missing = [...outputIds, ...entryOutputs].filter((id) => !known.outputs.has(id));
-  return missing.length ? `refers to output(s) ${missing.join(', ')}, which are neither in the lab nor in the file` : null;
+  return missing.length ? `refers to output(s) ${missing.join(', ')}, which are neither in the lab nor accepted from the file` : null;
+}
+
+/** The same rules the app applies when records are made inside the lab. Returns a problem, or the record to store. */
+function enforceRules(collection: Collection, record: Record<string, unknown>, known: Known): Record<string, unknown> | string {
+  if (collection === 'cases') {
+    const problems = lifecycleProblems(EvaluationCase.parse(record));
+    return problems.length ? problems.join('; ') : record;
+  }
+  if (collection === 'results') {
+    const result = EvaluationResultSchema.parse(record);
+    const profile = known.profiles.get(profileKey(record));
+    if (!profile) return 'has no profile to score against';
+    const problems = findingProblems(result.findings, profile);
+    if (problems.length) return problems.join(' ');
+    if (result.evaluator.type === 'ai-reviewer' && result.review.state === 'not-required') return 'is an AI-reviewer assessment marked as needing no spot-check';
+    const corrected = result.review.state === 'corrected';
+    if (corrected !== Boolean(result.review.originalFindings) || (!corrected && result.findings.some((f) => f.correctedByOwner)))
+      return 'has an inconsistent correction record (corrected findings without the reviewer’s originals, or the reverse)';
+    // The stored outcome is recomputed, so an edited file can never hide a mandatory failure.
+    return { ...record, overall: scoreFindings(profile, result.findings).overall };
+  }
+  if (collection === 'comparisons') {
+    const comparison = BlindedComparison.parse(record);
+    if (comparison.evaluator?.type === 'ai-reviewer' && comparison.review.state === 'not-required') return 'is an AI-reviewer comparison marked as needing no spot-check';
+    if ((comparison.status === 'recorded') !== Boolean(comparison.preference)) return 'has a status that does not match whether a preference was recorded';
+    if (comparison.review.state === 'rejected' && comparison.status === 'recorded') return 'records a preference that was rejected';
+  }
+  return record;
+}
+
+interface Accumulator {
+  readonly additions: Record<Collection, Array<Record<string, unknown>>>;
+  readonly skippedIdentical: number;
+  readonly problems: string[];
 }
 
 export function importBundle(raw: unknown, lab: LabSnapshot): BundleImport {
@@ -111,39 +153,39 @@ export function importBundle(raw: unknown, lab: LabSnapshot): BundleImport {
     COLLECTION_ORDER.map((c) => [c, new Map((lab[c] as readonly unknown[]).map((r) => [COLLECTIONS[c].key(r as Record<string, unknown>), r]))]), // lab records are plain objects
   ) as Record<Collection, Map<string, unknown>>; // built from COLLECTION_ORDER, so every collection is present
 
-  // Parse first, so references can be checked against both the lab and the file.
-  const parsed = COLLECTION_ORDER.map((collection) => ({
-    collection,
-    items: (bundle[collection] as unknown[]).map((rawRecord, index) => ({ index, result: COLLECTIONS[collection].schema.safeParse(rawRecord, { reportInput: true }) })),
-  }));
-  const validOf = (collection: Collection): Array<Record<string, unknown>> =>
-    (parsed.find((p) => p.collection === collection)?.items ?? []).flatMap((i) => (i.result.success ? [i.result.data as Record<string, unknown>] : [])); // schema-validated records
-  const known = {
-    cases: new Set([...existing.cases.keys(), ...validOf('cases').map(versionedKey)]),
-    outputs: new Set([...existing.outputs.keys(), ...validOf('outputs').map(idKey)]),
-  };
+  const knownFrom = (acc: Accumulator): Known => ({
+    profiles: new Map([...lab.profiles, ...(acc.additions.profiles as SpecialistProfileRecord[])].map((p) => [`${p.id}@${p.version}`, p])), // accepted profiles were schema-validated
+    cases: new Set([...existing.cases.keys(), ...acc.additions.cases.map(versionedKey)]),
+    outputs: new Set([...existing.outputs.keys(), ...acc.additions.outputs.map(idKey)]),
+  });
 
-  const outcome = parsed.reduce<Accumulator>(
-    (acc, { collection, items }) =>
-      items.reduce<Accumulator>((inner, { index, result }) => {
+  // Collections are processed in dependency order (profiles, cases, outputs, results…), so a reference is
+  // only accepted when what it points at was itself accepted.
+  const outcome = COLLECTION_ORDER.reduce<Accumulator>(
+    (acc, collection) =>
+      (bundle[collection] as unknown[]).reduce<Accumulator>((inner, rawRecord, index) => {
         const spec = COLLECTIONS[collection];
         const name = `${spec.label} ${index + 1}`;
-        if (!result.success) return { ...inner, problems: [...inner.problems, `${name}: ${describeZodError(result.error)}`] };
-        const record = result.data as Record<string, unknown>; // validated just above
+        const parsed = spec.schema.safeParse(rawRecord, { reportInput: true });
+        if (!parsed.success) return { ...inner, problems: [...inner.problems, `${name}: ${describeZodError(parsed.error)}`] };
+        const record = parsed.data as Record<string, unknown>; // validated just above
         const key = spec.key(record);
         const current = existing[collection].get(key);
+        const refuse = (why: string): Accumulator => ({ ...inner, problems: [...inner.problems, `${name} (${key}) ${why}; it was not imported.`] });
         if (current !== undefined) {
           return hashOf(current) === hashOf(record)
             ? { ...inner, skippedIdentical: inner.skippedIdentical + 1 }
             : { ...inner, problems: [...inner.problems, `${name} (${key}) differs from the record already in the lab; the existing record was kept.`] };
         }
-        if (collection === 'cases' && !freezeIntact(EvaluationCase.parse(record)))
-          return { ...inner, problems: [...inner.problems, `${name} (${key}) is marked frozen but its content no longer matches its freeze hash; it was not imported.`] };
-        const refProblem = referenceProblems(collection, record, known);
-        if (refProblem) return { ...inner, problems: [...inner.problems, `${name} (${key}) ${refProblem}; it was not imported.`] };
-        return { ...inner, additions: { ...inner.additions, [collection]: [...inner.additions[collection], record] } };
+        if (inner.additions[collection].some((r) => spec.key(r) === key)) return refuse('appears more than once in the file');
+        const known = knownFrom(inner);
+        const refProblem = referenceProblem(collection, record, known);
+        if (refProblem) return refuse(refProblem);
+        const checked = enforceRules(collection, record, known);
+        if (typeof checked === 'string') return refuse(checked);
+        return { ...inner, additions: { ...inner.additions, [collection]: [...inner.additions[collection], checked] } };
       }, acc),
-    { additions: emptyAdditions() as unknown as Record<Collection, unknown[]>, skippedIdentical: 0, problems: [] }, // same shape, widened for accumulation
+    { additions: emptyAdditions() as unknown as Accumulator['additions'], skippedIdentical: 0, problems: [] }, // same shape, widened for accumulation
   );
   const added = COLLECTION_ORDER.reduce((sum, c) => sum + outcome.additions[c].length, 0);
   return {

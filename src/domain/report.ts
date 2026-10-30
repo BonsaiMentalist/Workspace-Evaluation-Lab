@@ -177,7 +177,7 @@ export function compareOutputs(profile: SpecialistProfile, outputs: readonly Sav
   const uncertain = [
     ...(unclear.length ? [`${unclear.length} of ${rows.length} criteria could not be compared (not assessed, inconclusive, or assessed by different kinds of evaluator).`] : []),
     ...(pendingSpotChecks ? [`${pendingSpotChecks} imported assessment(s) still await your spot-check and are not counted.`] : []),
-    ...(results.length < outputs.length ? ['At least one output has no counted assessment.'] : []),
+    ...(outputIds.some((id) => !results.some((r) => r.outputId === id)) ? ['At least one output has no counted assessment.'] : []),
   ];
   const assessedRows = rows.length - unclear.length;
   // Ordered: the first verdict whose condition holds is given. A practically significant core difference

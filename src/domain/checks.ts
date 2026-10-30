@@ -53,10 +53,12 @@ const WORD = /\S+/g;
 // Markdown emphasis and trailing punctuation around a label value: "**Invalid.**" → "Invalid"; "Invalid" is unchanged.
 // https://regex101.com/?flavor=javascript&regex=%5E%5B*_%60%5Cs%5D%2B%7C%5B*_%60.%3B%2C!%5Cs%5D%2B%24&flags=g&testString=**Invalid.**%0AInvalid
 const VALUE_DECORATION = /^[*_`\s]+|[*_`.;,!\s]+$/g;
-// Characters with special meaning in a regex, escaped before a label is built into a pattern: "a.b" → "a\\.b"; "ab" is unchanged.
-// https://regex101.com/?flavor=javascript&regex=%5B.*%2B%3F%5E%24%7B%7D()%7C%5B%5C%5D%5C%5C%5D&flags=g&testString=a.b%0Aab
-const REGEX_SPECIAL = /[.*+?^${}()|[\]\\]/g;
-
+const LABEL_DECORATION: ReadonlySet<string> = new Set(['*', '_', '`', ' ', '\t', '\r']);
+const NEWLINE = '\n';
+const COLON = ':';
+const MAX_DETAIL = 300;
+const MAX_EXPLANATION = 4900;
+const ELLIPSIS = '…';
 const JSON_OPEN = '{';
 const JSON_CLOSE = '}';
 const NOT_FOUND = -1;
@@ -65,15 +67,31 @@ export function normalizeText(text: string): string {
   return text.replace(CURLY_SINGLE, "'").replace(CURLY_DOUBLE, '"').replace(WHITESPACE_RUN, ' ').trim().toLowerCase();
 }
 
-const quoteList = (items: readonly string[]): string => items.map((i) => `"${i}"`).join(', ');
+/** Shortens text quoted from an output, so a finding's explanation stays within its size limit. */
+const clip = (text: string, max: number = MAX_DETAIL): string => (text.length > max ? `${text.slice(0, max)}${ELLIPSIS}` : text);
 
+const quoteList = (items: readonly string[]): string => items.map((i) => `"${clip(i)}"`).join(', ');
+
+/** Strips markdown emphasis characters and spaces from the start of a string. */
+function stripLeadingDecoration(text: string): string {
+  const firstPlain = [...text].findIndex((ch) => !LABEL_DECORATION.has(ch));
+  return firstPlain < 0 ? '' : text.slice(firstPlain);
+}
+
+/**
+ * The value of the first line "<label>: <value>" (label optionally in markdown
+ * emphasis). Plain string scanning, line by line, so even a very long output
+ * is checked in linear time.
+ */
 function findLabelValue(output: string, label: string): string | null {
-  const escaped = label.replace(REGEX_SPECIAL, '\\$&');
-  // A line "<label>: <value>", label optionally in markdown emphasis; captures the value.
-  // With label "Classification": "Classification: Invalid" → "Invalid"; "**Classification**: Valid" → "Valid"; rejects "Class: x".
-  // https://regex101.com/?flavor=javascript&regex=%5E%5Cs*%5B*_%60%5D*%5Cs*Classification%5Cs*%5B*_%60%5D*%5Cs*%3A%5Cs*(.%2B)%24&flags=gim&testString=Classification%3A%20Invalid%0A**Classification**%3A%20Valid%0AClass%3A%20x
-  const linePattern = new RegExp(`^\\s*[*_\`]*\\s*${escaped}\\s*[*_\`]*\\s*:\\s*(.+)$`, 'im');
-  const value = linePattern.exec(output)?.[1];
+  const wanted = label.toLowerCase();
+  const values = output.split(NEWLINE).flatMap((line) => {
+    const start = stripLeadingDecoration(line);
+    if (!start.toLowerCase().startsWith(wanted)) return [];
+    const afterLabel = stripLeadingDecoration(start.slice(wanted.length));
+    return afterLabel.startsWith(COLON) && afterLabel.slice(1).trim() ? [afterLabel.slice(1).trim()] : [];
+  });
+  const value = values[0];
   return value === undefined ? null : value.replace(VALUE_DECORATION, '');
 }
 
@@ -141,7 +159,7 @@ const CHECKS: CheckTable = {
       const value = findLabelValue(output, check.label);
       if (value === null) return { passed: false, detail: `No line starting "${check.label}:" was found.` };
       const passed = check.accepted.some((a) => normalizeText(a) === normalizeText(value));
-      return { passed, detail: `"${check.label}" is "${value}"; accepted: ${quoteList(check.accepted)}.` };
+      return { passed, detail: `"${check.label}" is "${clip(value)}"; accepted: ${quoteList(check.accepted)}.` };
     },
   },
   'required-field': {
@@ -211,7 +229,7 @@ export function findingsFromChecks(outcomes: readonly CheckOutcome[]): Finding[]
       criterionId,
       outcome,
       rating: null,
-      explanation: lines.join('\n'),
+      explanation: clip(lines.join('\n'), MAX_EXPLANATION),
       evidenceRefs: [],
       method: 'deterministic',
       checkId: mine.length === 1 ? (mine[0]?.checkId ?? null) : null,

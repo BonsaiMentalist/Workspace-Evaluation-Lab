@@ -10,6 +10,7 @@ import { bodyOf, longText } from '../form.js';
 import { idParam, NotFoundError, redirectDone, render, type AppContext } from '../context.js';
 import { caseLink, findingsTable, outputBody, scoreSummaryView, TIPS } from '../views.js';
 import { findingsFields, findingsFromForm } from './scoringForm.js';
+import { outputsInOpenComparisons, passBlindGuard } from '../blindGuard.js';
 
 export function reviewRoutes(ctx: AppContext, csrfCheck: RequestHandler): Router {
   const router = Router();
@@ -18,6 +19,8 @@ export function reviewRoutes(ctx: AppContext, csrfCheck: RequestHandler): Router
     const lab = ctx.store.snapshot();
     const batches = [...lab.importBatches].sort((a, b) => b.importedAt.localeCompare(a.importedAt));
     const titleOf = (r: EvaluationResult): string => findCase(lab, r.caseId, r.caseVersion)?.title ?? r.caseId;
+    const masked = outputsInOpenComparisons(lab);
+    const outputName = (r: EvaluationResult): string => (masked.has(r.outputId) ? 'Hidden while its blind comparison is open' : (findOutput(lab, r.outputId)?.label ?? r.outputId));
     const batchCards = batches.map((b) => {
       const progress = batchProgress(b, lab);
       const pending = lab.results.filter((r) => r.importRef?.batchId === b.id && r.review.state === 'needs-spot-check');
@@ -30,7 +33,7 @@ export function reviewRoutes(ctx: AppContext, csrfCheck: RequestHandler): Router
             ? html`<p>${progress.total} assessment(s): ${progress.pending} awaiting a spot-check. You have checked ${progress.reviewedIndividually} one by one; at least ${progress.sampleRequired} are needed before the rest can be accepted together. ${tip(TIPS.spotCheck)}</p>`
             : html`<p>Assessments by a person do not need a spot-check.</p>`
         }
-        ${pending.length ? html`<div class="table-wrap"><table><thead><tr><th scope="col">Case</th><th scope="col">Output</th><th scope="col"></th></tr></thead><tbody>${pending.map((r) => html`<tr><td>${titleOf(r)}</td><td>${findOutput(lab, r.outputId)?.label ?? r.outputId}</td><td>${linkButton(`/review/${r.id}`, 'Spot-check', 'primary')}</td></tr>`)}</tbody></table></div>` : ''}
+        ${pending.length ? html`<div class="table-wrap"><table><thead><tr><th scope="col">Case</th><th scope="col">Output</th><th scope="col"></th></tr></thead><tbody>${pending.map((r) => html`<tr><td>${titleOf(r)}</td><td>${outputName(r)}</td><td>${linkButton(`/review/${r.id}`, 'Spot-check', 'primary')}</td></tr>`)}</tbody></table></div>` : ''}
         ${comparisons.length ? html`<p>Blind comparisons from this batch awaiting your decision: ${comparisons.map((c) => html`<a href="/compare/${c.id}">${findCase(lab, c.caseId, c.caseVersion)?.title ?? c.caseId}</a> `)} ${tip(TIPS.blinded)}</p>` : ''}
         ${progress.canAcceptRest ? postForm(`/review/batch/${b.id}/accept-rest`, ctx.csrf, button(`Accept the remaining ${progress.pending}`, 'secondary')) : ''}
         ${b.rejected.length ? html`<div class="alert alert-warn"><strong>Entries rejected on import (never stored):</strong><ul>${b.rejected.map((r) => html`<li>${r.message}</li>`)}</ul></div>` : ''}`,
@@ -50,6 +53,7 @@ export function reviewRoutes(ctx: AppContext, csrfCheck: RequestHandler): Router
 
   router.get('/review/:id', (req, res) => {
     const r = load(req);
+    if (!passBlindGuard(req, res, ctx, r.outputId, 'review')) return;
     const lab = ctx.store.snapshot();
     const profile = findProfile(lab, r.profileId, r.profileVersion);
     const testCase = findCase(lab, r.caseId, r.caseVersion);
@@ -71,11 +75,11 @@ export function reviewRoutes(ctx: AppContext, csrfCheck: RequestHandler): Router
                 )}
                 ${section(
                   'Or correct it',
-                  postForm(
+                  html`<details><summary>Show the correction form</summary>${postForm(
                     `/review/${r.id}/correct`,
                     ctx.csrf,
                     html`<p class="muted small">Change any finding. The reviewer’s original findings are kept beside yours.</p>${findingsFields(profile, r.findings)}<label>Note about your correction <input name="note"></label>${button('Save correction')}`,
-                  ),
+                  )}</details>`,
                 )}`
               : ''
           }</div>
